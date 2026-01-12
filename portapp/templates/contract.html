@@ -1,0 +1,384 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SEA PORT | User Home</title>
+  <link href="//fonts.googleapis.com/css2?family=Castoro:ital@0;1&display=swap" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'user/assets/css/style-starter.css' %}">
+  <style>
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      background: #f8fbff;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    /* Header background white */
+    header#site-header, .navbar, .navbar .container {
+      background: #fff !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .navbar-brand {
+      font-family: 'Castoro', serif;
+      font-size: 2rem;
+      color: #007BFF !important;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    .navbar-nav .nav-link {
+      font-weight: 600;
+      color: #222 !important;
+      margin-right: 18px;
+      transition: color 0.2s;
+    }
+    .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+      color: #007BFF !important;
+    }
+   .hero-section {
+      background: linear-gradient(120deg, rgba(0,123,255,0.85) 70%, #e3f2fd 100%),
+              url('{% static "user/assets/images/Kandala-Port1.jpg" %}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-blend-mode: overlay;
+      color: #fff;
+      padding: 100px 20px 80px;
+      text-align: center;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+    }
+    .hero-section p {
+      font-size: 1.25rem;
+      margin-bottom: 32px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-section .btn {
+      padding: 12px 32px;
+      font-size: 1.1rem;
+      border-radius: 24px;
+      margin: 0 10px;
+      font-weight: 600;
+      border: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .hero-section .btn-primary {
+      background: #007BFF;
+      color: #fff;
+    }
+    .hero-section .btn-primary:hover {
+      background: #0056b3;
+    }
+    .hero-section .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+    }
+    .hero-section .btn-outline:hover {
+      background: #fff;
+      color: #007BFF;
+    }
+    .section-bg {
+      background: #fff;
+    }
+    .grids-feature {
+      transition: box-shadow 0.2s, transform 0.2s;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,123,255,0.07);
+      margin-bottom: 32px;
+      padding: 32px 24px;
+      text-align: center;
+      color: #222;
+    }
+    .grids-feature:hover {
+      box-shadow: 0 8px 32px rgba(0,123,255,0.15);
+      transform: translateY(-6px) scale(1.03);
+    }
+    .grids-feature .icon {
+      font-size: 2.5rem;
+      color: #007BFF;
+      margin-bottom: 18px;
+    }
+    .grids-feature .title-head {
+      color: #007BFF;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    /* Footer background white */
+    .footer-28 {
+      background: #fff !important;
+      color: #222;
+      padding-top: 40px;
+      padding-bottom: 0;
+      border-top: 1px solid #e3f2fd;
+    }
+    .footer-title-28 {
+      color: #007BFF;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+    }
+    .footer-list-28 ul {
+      padding-left: 0;
+      list-style: none;
+    }
+    .footer-list-28 ul li a {
+      color: #007BFF;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .footer-list-28 ul li a:hover {
+      color: #0056b3;
+    }
+    .main-social-footer-28 .social-icons {
+      display: flex;
+      gap: 18px;
+      padding-left: 0;
+      margin-top: 10px;
+    }
+    .main-social-footer-28 .social-icons li a {
+      color: #007BFF;
+      font-size: 1.3rem;
+      transition: color 0.2s;
+    }
+    .main-social-footer-28 .social-icons li a:hover {
+      color: #0056b3;
+    }
+    .copy-footer-28 {
+      color: #888;
+      font-size: 1rem;
+      margin: 0;
+      padding: 18px 0 8px 0;
+      border-top: 1px solid #e3f2fd;
+      background: transparent;
+    }
+    @media (max-width: 900px) {
+      .hero-section {
+        padding: 80px 10px 60px;
+        min-height: 320px;
+      }
+      .grids-feature {
+        padding: 24px 10px;
+      }
+    }
+    @media (max-width: 600px) {
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+      .hero-section p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <a class="navbar-brand" href="#" style="color: #007BFF !important;">SEA PORTAL</a>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse"
+          data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars" style="color: #007BFF;"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times" style="color: #007BFF;"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active"><a class="nav-link" href="#" style="color: #007BFF !important;">Home</a></li>
+             <li class="nav-item">
+              <a class="nav-link" href="{% url 'update_contract_profile' %}" style="color: #007BFF !important;">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'view_tenders' %}" style="color: #007BFF !important;">Tenders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'view_my_applications' %}" style="color: #007BFF !important;">My contracts</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'tender_alerts' %}" style="color: #007BFF !important;">notifications</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about_contractor' %}" style="color: #007BFF !important;">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_logout' %}" style="color: #007BFF !important;">Logout</a>
+            </li>
+            </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <!-- //header -->
+  <!-- Hero Section -->
+  <section class="hero-section" style="background: url('{% static "user/assets/images/ab2.jpg" %}'); background-size: cover; background-position: center; background-repeat: no-repeat; color: #fff;">
+    <h1 style="color: #fff; 
+           text-shadow: 0 4px 18px rgba(0,0,0,0.7), 0 1px 0 #222;">
+      WELCOME TO SEA PORTAL
+    </h1>
+    <p style="color: #fff; 
+          font-weight: 600; 
+          text-shadow: 0 4px 18px rgba(0,0,0,0.7), 0 1px 0 #222;">
+      Connecting nations, enabling trade, and fostering economic growth through world-class port facilities and services.
+    </p>
+    <div>
+      <a class="btn btn-primary" href="#about">Read More</a>
+      <a class="btn btn-outline" href="#contact">Contact Us</a>
+    </div>
+  </section>
+
+  <!-- Image Carousel Section -->
+  <div class="owl-carousel owl-one" style="margin: 40px auto; max-width: 900px;">
+    <div><img src="{% static 'user/assets/images/kkk.jpg' %}" alt="Port 1" style="width:100%;border-radius:12px;"></div>
+    <div><img src="{% static 'user/assets/images/banner2.jpg' %}" alt="Port 2" style="width:100%;border-radius:12px;"></div>
+  </div>
+
+  <!-- Features -->
+  <section class="w3l-features py-5 section-bg" id="features" style="color: #222;">
+    <div class="container py-lg-5 py-md-4">
+      <div class="row">
+        <div class="col-lg-4 col-sm-6 grids-feature" style="color: #222;">
+          <div class="icon"><span class="fa fa-ship"></span></div>
+          <h4 class="title-head" style="color: #007BFF;">World-Class Infrastructure</h4>
+          <p style="color: #222;">Equipped with modern berths, cranes, and storage facilities for efficient cargo handling.</p>
+        </div>
+        <div class="col-lg-4 col-sm-6 grids-feature" style="color: #222;">
+          <div class="icon"><span class="fa fa-globe"></span></div>
+          <h4 class="title-head" style="color: #007BFF;">Global Connectivity</h4>
+          <p style="color: #222;">Direct shipping routes to major international ports, connecting India to the world.</p>
+        </div>
+        <div class="col-lg-4 col-sm-6 grids-feature" style="color: #222;">
+          <div class="icon"><span class="fa fa-leaf"></span></div>
+          <h4 class="title-head" style="color: #007BFF;">Sustainable Operations</h4>
+          <p style="color: #222;">Committed to green practices and environmental protection in all port activities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- //Features -->
+   <!-- About Sea Port -->
+  <section class="w3l-grids-3 py-5" id="about" style="color: #222; background: #e3f2fd;">
+    <div class="container py-md-5 py-3">
+      <div class="bottom-ab-grids align-items-center">
+        <div class="bottom-ab-left">
+          <h6 class="sub-title" style="color: #007BFF;">About Sea Port</h6>
+          <h3 class="hny-title" style="color: #007BFF;">Gateway to Global Trade</h3>
+          <p class="my-3" style="color: #222;">
+            Vizhinjam International Sea Port is a state-of-the-art deepwater, multipurpose port located on the southern tip of India. 
+            Our port is designed to handle the largest container ships, bulk cargo, and passenger vessels, making it a vital hub for international shipping and logistics.
+          </p>
+          <ul>
+            <li style="color: #222;">Modern container and cargo handling facilities</li>
+            <li style="color: #222;">Efficient customs and logistics support</li>
+            <li style="color: #222;">Secure and sustainable port operations</li>
+            <li style="color: #222;">24/7 support for exporters and importers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- //About Sea Port -->
+
+  <!-- Footer -->
+  <section class="w3l-footer" id="contact">
+    <footer class="footer-28">
+      <div class="footer-bg-layer">
+        <div class="container py-lg-3">
+          <div class="row footer-top-28">
+            <div class="col-lg-6 col-md-5 footer-list-28 mt-5">
+              <h6 class="footer-title-28" style="color: #007BFF;">Contact information</h6>
+              <ul>
+                <li>
+                  <p><strong style="color: #007BFF;">Address</strong> : <span style="color: #007BFF;">Vizhinjam International Seaport, Trivandrum, Kerala, India</span></p>
+                </li>
+                <li>
+                  <p><strong style="color: #007BFF;">Phone</strong> : <a href="tel:+914712345678" style="color: #007BFF;">+91 471 2345678</a></p>
+                </li>
+                <li>
+                  <p><strong style="color: #007BFF;">Email</strong> : <a href="mailto:info@vizhinjamport.in" style="color: #007BFF;">info@vizhinjamport.in</a></p>
+                </li>
+              </ul>
+              <div class="main-social-footer-28 mt-3">
+                <ul class="social-icons">
+                  <li><a href="https://www.facebook.com/VizhinjamPort" target="_blank" class="facebook"><span class="fa fa-facebook"></span></a></li>
+                  <li><a href="https://twitter.com/VizhinjamPort" target="_blank" class="twitter"><span class="fa fa-twitter"></span></a></li>
+                  <li><a href="https://www.instagram.com/VizhinjamPort" target="_blank" class="instagram"><span class="fa fa-instagram"></span></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-7">
+              <div class="row">
+                <div class="col-sm-4 col-6 footer-list-28 mt-5">
+                  <h6 class="footer-title-28" style="color: #007BFF;">Sea Port</h6>
+                  <ul>
+                    <li><a href="#about" style="color: #007BFF;">About Us</a></li>
+                    <li><a href="#features" style="color: #007BFF;">Facilities</a></li>
+                    <li><a href="#contact" style="color: #007BFF;">Contact</a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-4 col-6 footer-list-28 mt-5">
+                  <h6 class="footer-title-28" style="color: #007BFF;">Quick Links</h6>
+                    <ul>
+                    <li><a href="{% url 'update_contract_profile' %}" style="color: #007BFF;">Profile</a></li>
+                    <li><a href="{% url 'view_tenders' %}" style="color: #007BFF;">Tenders</a></li>
+                    <li><a href="{% url 'tender_alerts' %}" style="color: #007BFF;">Notifications</a></li>
+                    </ul>
+                </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="midd-footer-28 py-lg-4 py-3 mt-5 text-center" style="background: #e3f2fd; color: #222;">
+          <div class="container">
+            <p class="copy-footer-28" style="color: #222;">© 2025 Vizhinjam International Seaport. All Rights Reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+  <!-- //Footer -->
+
+  <script src="{% static 'user/assets/js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'user/assets/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'user/assets/js/theme-change.js' %}"></script>
+  <script src="{% static 'user/assets/js/owl.carousel.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('.owl-one').owlCarousel({
+        loop: true,
+        margin: 0,
+        nav: false,
+        responsiveClass: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplaySpeed: 1000,
+        autoplayHoverPause: false,
+        responsive: {
+          0: { items: 1, nav: false },
+          480: { items: 1, nav: false },
+          667: { items: 1, nav: true },
+          1000: { items: 1, nav: true }
+        }
+      })
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!-- filepath: c:\Users\Poornima\seaport\portapp\templates\appointment_letter.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Letter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Appointment Letter</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Dear {{ application.user.first_name }},</h5>
+                <p>We are pleased to inform you that you have been selected for the position of <strong>{{ application.job_id.job_name }}</strong>.</p>
+                <p>Your appointment is effective immediately. Please contact our HR department for further details.</p>
+                <p>Thank you for your interest in joining our team.</p>
+                <p>Best regards,</p>
+                <p><strong>The Company</strong></p>
+            </div>
+        </div>
+        <a href="{% url 'job_status' %}" class="btn btn-secondary mt-3">Back to Job Status</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

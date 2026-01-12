@@ -1,0 +1,164 @@
+{% extends "user_header.html" %}
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #f0f7ff !important;
+    }
+
+    .chat-container {
+        max-width: 650px;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0, 123, 255, 0.2);
+        display: flex;
+        flex-direction: column;
+        height: 75vh;
+        overflow: hidden;
+    }
+
+    .chat-header {
+        padding: 18px 24px;
+        background: linear-gradient(to right, #003366, #007BFF);
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+        background: #eaf3fc;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .message-row {
+        display: flex;
+        flex-direction: column;
+        max-width: 70%;
+    }
+
+    .message-row.sent {
+        align-self: flex-end;
+        align-items: flex-end;
+    }
+
+    .message-row.received {
+        align-self: flex-start;
+        align-items: flex-start;
+    }
+
+    .message-bubble {
+        padding: 12px 18px;
+        border-radius: 20px;
+        font-size: 1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        word-break: break-word;
+    }
+
+    .message-row.sent .message-bubble {
+        background: #007BFF;
+        color: #fff;
+    }
+
+    .message-row.received .message-bubble {
+        background: #ffffff;
+        color: #003366;
+        border: 1px solid #cce0f5;
+    }
+
+    .message-meta {
+        font-size: 0.75rem;
+        color: #666;
+        margin-top: 4px;
+    }
+
+    .chat-input-area {
+        display: flex;
+        padding: 16px 24px;
+        background: #ffffff;
+        border-top: 1px solid #d0e3f1;
+        gap: 12px;
+    }
+
+    .chat-input-area input[type="text"] {
+        flex: 1;
+        border-radius: 30px;
+        border: 1px solid #cce0f5;
+        padding: 10px 18px;
+        font-size: 1rem;
+        outline: none;
+        background: #f5fbff;
+        color: #003366;
+    }
+
+    .chat-input-area input[type="text"]:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+    }
+
+    .chat-input-area button {
+        background: #003366;
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 0 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+
+    .chat-input-area button:hover {
+        background: #0056b3;
+    }
+
+    .text-muted {
+        color: #666 !important;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        {{ receiver.username }}
+    </div>
+    <div class="chat-messages" id="chat-box">
+        {% for message in messages %}
+            <div class="message-row {% if message.sender == current_user %}sent{% else %}received{% endif %}">
+                <div class="message-bubble">
+                    {{ message.message }}
+                </div>
+                <div class="message-meta">
+                    <span>{% if message.sender == current_user %}You{% else %}{{ message.sender.username }}{% endif %}</span>
+                    &middot;
+                    <span>{{ message.current_date }} {{ message.current_time }}</span>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center text-muted">No messages yet.</div>
+        {% endfor %}
+    </div>
+
+    <form method="post" class="chat-input-area">
+        {% csrf_token %}
+        <input type="text" name="message" placeholder="Type a message..." autocomplete="off" required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+    // Auto scroll to bottom
+    const chatBox = document.getElementById("chat-box");
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+{% endblock %}

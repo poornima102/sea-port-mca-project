@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Items to {{ ship.ship_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Flatpickr -->
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0b1120;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #e0f2fe;
+        }
+
+        .form-section,
+        .list-section {
+            background-color: #111827;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            padding: 2rem;
+        }
+
+        .form-label,
+        label {
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #f1f5f9;
+        }
+
+        .form-control:focus {
+            background-color: #1e293b;
+            border-color: #3b82f6;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-success {
+            background-color: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .btn-success:hover {
+            background-color: #16a34a;
+            border-color: #16a34a;
+        }
+
+        .btn-outline-light {
+            border-color: #94a3b8;
+            color: #94a3b8;
+        }
+
+        .btn-outline-light:hover {
+            background-color: #94a3b8;
+            color: #0b1120;
+        }
+
+        .list-group-item {
+            background-color: transparent;
+            color: #ffffff;
+            border-color: #334155;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .imported-date {
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        .badge {
+            font-size: 1rem;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <h2 class="mb-5 text-center page-title">
+        <i class="fas fa-ship me-2"></i>Add Items to {{ ship.ship_name }}
+    </h2>
+
+    <div class="form-section mb-4">
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label for="{{ form.item_name.id_for_label }}" class="form-label">Item Name</label>
+                    {{ form.item_name }}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
+                    {{ form.quantity }}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{ form.import_date.id_for_label }}" class="form-label">Import Date</label>
+                    {{ form.import_date }}
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-plus me-1"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="list-section">
+        <h4 class="mb-4">Imported Items</h4>
+        <ul class="list-group">
+            {% for imp in imports %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-semibold">{{ imp.item_name }}</span>
+                        <span class="imported-date ms-2">
+                            {% if imp.import_date %}({{ imp.import_date|date:"Y-m-d" }}){% endif %}
+                        </span>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">{{ imp.quantity }}</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No items imported yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'imported_items' %}" class="back-link">&larr; Back to Companies</a>
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+<!-- Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("input[name='import_date']", {
+        dateFormat: "Y-m-d",
+        allowInput: true
+    });
+</script>
+
+</body>
+</html>

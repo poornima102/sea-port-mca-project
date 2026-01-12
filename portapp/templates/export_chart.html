@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Export Summary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+    body {
+        background-color: #0b1120;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 30px;
+        color: #f1f5f9;
+    }
+
+    .chart-container {
+        max-width: 1100px;
+        margin: auto;
+        background: #111827;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        color: #e2e8f0;
+    }
+
+    h2 {
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #e0f2fe;
+    }
+
+    .chart-box {
+        height: 500px;
+        position: relative;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .nav-tabs .nav-link {
+        color: #cbd5e1;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #1e293b;
+        color: #ffffff;
+        border-color: #1e293b #1e293b #111827;
+    }
+
+    .tab-content {
+        background-color: transparent;
+    }
+    </style>
+</head>
+<body>
+
+<div class="chart-container">
+    <h2>📊 Export Summary</h2>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="chartTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly" type="button" role="tab">
+                Monthly Summary
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="yearly-tab" data-bs-toggle="tab" data-bs-target="#yearly" type="button" role="tab">
+                Yearly Summary
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="chartTabsContent">
+        <!-- Monthly -->
+        <div class="tab-pane fade show active" id="monthly" role="tabpanel">
+            <div class="chart-box">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Yearly -->
+        <div class="tab-pane fade" id="yearly" role="tabpanel">
+            <div class="chart-box">
+                <canvas id="yearlyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Scripts -->
+<script>
+    const monthlyChart = new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: {{ monthly_labels|safe }},
+            datasets: [
+                {
+                    label: 'Total Tax (₹)',
+                    data: {{ monthly_tax|safe }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                    borderRadius: 5
+                },
+                {
+                    label: 'Total Export Amount (₹)',
+                    data: {{ monthly_amount|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Monthly Export Summary',
+                    font: { size: 18 },
+                    color: '#f1f5f9'
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#f1f5f9'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `₹ ${ctx.formattedValue}`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#f1f5f9',
+                        callback: value => '₹' + value
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#f1f5f9',
+                        maxRotation: 60,
+                        autoSkip: false
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    }
+                }
+            }
+        }
+    });
+
+    const yearlyChart = new Chart(document.getElementById('yearlyChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: {{ yearly_labels|safe }},
+            datasets: [
+                {
+                    label: 'Total Tax (₹)',
+                    data: {{ yearly_tax|safe }},
+                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                    borderRadius: 5
+                },
+                {
+                    label: 'Total Export Amount (₹)',
+                    data: {{ yearly_amount|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Yearly Export Summary',
+                    font: { size: 18 },
+                    color: '#f1f5f9'
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#f1f5f9'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `₹ ${ctx.formattedValue}`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#f1f5f9',
+                        callback: value => '₹' + value
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#f1f5f9'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<!-- Bootstrap JS (for tabs) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

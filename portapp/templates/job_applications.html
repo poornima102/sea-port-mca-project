@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #f1f5f9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 16px;
+            margin-top: 60px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #e0f2fe;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            color: #f1f5f9;
+            background-color: transparent;
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #334155;
+            background-color: transparent;
+            color: #ffffff;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1f2937;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #273449;
+        }
+
+        .table tbody tr:hover {
+            background-color: #334155;
+        }
+
+        .btn {
+            font-weight: 500;
+        }
+
+        .btn-info {
+            background-color: #3b82f6;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-info:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-success {
+            background-color: #22c55e;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280;
+            border: none;
+        }
+
+        .badge {
+            font-size: 0.875rem;
+            padding: 0.4em 0.65em;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .action-btns form {
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center">Job Applications</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Applicant Name</th>
+                    <th>Job Name</th>
+                    <th>CV</th>
+                    <th>Actions</th>
+                    <th>Status</th>
+                    <th>Hire</th>
+                    <th>Appointment Letter</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ application.user.name }}</td>
+                    <td>{{ application.job_id.job_name }}</td>
+                    <td>
+                        <a href="{{ application.cv.url }}" class="btn btn-info btn-sm" target="_blank">View CV</a>
+                    </td>
+                    <td class="action-btns">
+                        <form action="{% url 'accept_application' application.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm"
+                                    {% if application.status == 1 or application.status == 2 %}disabled{% endif %}>
+                                Accept
+                            </button>
+                        </form>
+                        <form action="{% url 'reject_application' application.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    {% if application.status == 1 or application.status == 2 %}disabled{% endif %}>
+                                Reject
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        {% if application.status == 1 %}
+                            <span class="badge bg-success">Accepted</span>
+                        {% elif application.status == 2 %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if application.status == 1 %}
+                            <a href="{% url 'update_hiring_status' application.id %}" class="btn btn-primary btn-sm">
+                                Hire
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Not Available</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if application.appointment_status == 1 %}
+                            {% if application.appointment_letter %}
+                                <span class="badge bg-success">Uploaded</span>
+                            {% else %}
+                                <a href="{% url 'upload_appointment_letter' application.id %}" class="btn btn-secondary btn-sm">
+                                    Upload
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">Not Available</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No applications available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'admin' %}" class="btn btn-secondary">Back to  Home</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

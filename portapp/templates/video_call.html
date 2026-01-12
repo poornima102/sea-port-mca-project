@@ -1,0 +1,112 @@
+<!-- filepath: c:\Users\Poornima\OneDrive\Desktop\project\seaport\seaport\portapp\templates\video_call.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview Video Call</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: sans-serif;
+        }
+        #root {
+            width: 100vw;
+            height: 90vh;
+            display: none;
+        }
+        #joinBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #joinBtn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    {% if not interview_completed %}
+        <button id="joinBtn" class="btn btn-primary">Join Interview</button>
+        {% if is_admin %}
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" name="complete" class="btn btn-success">Complete Interview</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <button class="btn btn-success" disabled>Interview Completed</button>
+    {% endif %}
+    <div id="root"></div>
+
+    <!-- ZEGOCLOUD SDK -->
+    <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+    <script>
+        const interviewId = "{{ var.pk }}";
+        const csrfToken = "{{ csrf_token }}";
+
+        const roomID = new URLSearchParams(window.location.search).get('roomID') || (Math.floor(Math.random() * 10000) + "");
+        const userID = Math.floor(Math.random() * 10000) + "";
+        const userName = "user_" + userID;
+        const appID = 1224095121;
+        const serverSecret = "f11a2727a369b530a0cff239236e8919";
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+        const videoLink = window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID;
+
+        document.getElementById("joinBtn").onclick = function () {
+            this.disabled = true;
+            this.textContent = "Joining...";
+            fetch(`/save-appointment-url/${interviewId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ url: videoLink })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("joinBtn").style.display = "none";
+                    document.getElementById("root").style.display = "block";
+                    const zp = ZegoUIKitPrebuilt.create(kitToken);
+                    zp.joinRoom({
+                        container: document.querySelector("#root"),
+                        sharedLinks: [{
+                            name: 'Interview Link',
+                            url: videoLink,
+                        }],
+                        scenario: {
+                            mode: ZegoUIKitPrebuilt.VideoConference,
+                        },
+                        turnOnMicrophoneWhenJoining: true,
+                        turnOnCameraWhenJoining: true,
+                        showMyCameraToggleButton: true,
+                        showMyMicrophoneToggleButton: true,
+                        showAudioVideoSettingsButton: true,
+                        showScreenSharingButton: true,
+                        showTextChat: true,
+                        showUserList: true,
+                        maxUsers: 50,
+                        layout: "Auto",
+                        showLayoutButton: true,
+                    });
+                } else {
+                    console.error("Failed to save video link:", data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error while saving video link:", error);
+            });
+        };
+    </script>
+</body>
+</html>

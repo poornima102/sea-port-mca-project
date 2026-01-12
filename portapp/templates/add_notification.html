@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Notification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        h2, h3, label, .form-label, th, td, .text-muted {
+            color: #ffffff !important;
+        }
+
+        .form-control {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #ffffff;
+        }
+
+        .form-control::placeholder {
+            color: #cbd5e1;
+        }
+
+        .form-control:focus {
+            background-color: #1e293b;
+            color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background-color: #334155;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-warning, .btn-danger {
+            color: #ffffff !important;
+        }
+
+        .card-box {
+            background-color: #111827;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+        }
+
+        .table {
+            background-color: #111827;
+            color: #ffffff;
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border-color: #334155;
+            background-color: #111827 !important;
+            color: #ffffff;
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1f2937 !important;
+        }
+
+        .notification-message {
+            color: #ffffff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <a href="{% url 'admin' %}" class="btn btn-outline-light mb-4">
+        <i class="fas fa-home"></i> Back to Home
+    </a>
+
+    <div class="card-box">
+        <h2>Add Notification</h2>
+        <form method="post" id="notificationForm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="recipient_type" class="form-label">Send To</label>
+                <select name="recipient_type" id="recipient_type" class="form-control" required onchange="toggleCompanySelect()">
+                    <option value="">-- Select --</option>
+                    <option value="user">All Users</option>
+                    <option value="company">Specific Company</option>
+                </select>
+            </div>
+            <div class="mb-3" id="company_select_div" style="display:none;">
+                <label for="company_id" class="form-label">Select Company</label>
+                <select name="company_id" id="company_id" class="form-control">
+                    <option value="">-- Select Company --</option>
+                    {% for company in companies %}
+                        <option value="{{ company.id }}">{{ company.company_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Notification</label>
+                <textarea name="message" id="message" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{% url 'add_notification' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+    <!-- User Notifications -->
+    <div id="user_notifications_table" class="card-box" style="display:none;">
+        <h3>User Notifications</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Recipient</th>
+                    <th>Notification</th>
+                    <th>Created At</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notification in notifications %}
+                <tr>
+                    <td>All Users</td>
+                    <td class="notification-message">{{ notification.message }}</td>
+                    <td>{{ notification.latest_created_at|date:"F j, Y, g:i a" }}</td>
+                    <td class="action-buttons">
+                        <a href="{% url 'edit_notification' notification.latest_id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'delete_notification' notification.latest_id %}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this notification?');">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No user notifications found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Company Notifications -->
+    <div id="company_notifications_table" class="card-box" style="display:none;">
+        <h3>Company Notifications</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Notification</th>
+                    <th>Created At</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notification in company_notifications %}
+                <tr>
+                    <td>{{ notification.company.company_name }}</td>
+                    <td class="notification-message">{{ notification.message }}</td>
+                    <td>{{ notification.created_at|date:"F j, Y, g:i a" }}</td>
+                    <td class="action-buttons">
+                        <a href="{% url 'edit_company_notification' notification.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'delete_company_notification' notification.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this company notification?');">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No company notifications found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function toggleCompanySelect() {
+    const recipientType = document.getElementById('recipient_type').value;
+    const companyDiv = document.getElementById('company_select_div');
+    const userTable = document.getElementById('user_notifications_table');
+    const companyTable = document.getElementById('company_notifications_table');
+
+    if (recipientType === 'company') {
+        companyDiv.style.display = 'block';
+        companyTable.style.display = 'block';
+        userTable.style.display = 'none';
+    } else if (recipientType === 'user') {
+        companyDiv.style.display = 'none';
+        companyTable.style.display = 'none';
+        userTable.style.display = 'block';
+    } else {
+        companyDiv.style.display = 'none';
+        companyTable.style.display = 'none';
+        userTable.style.display = 'none';
+    }
+}
+window.onload = toggleCompanySelect;
+</script>
+
+</body>
+</html>

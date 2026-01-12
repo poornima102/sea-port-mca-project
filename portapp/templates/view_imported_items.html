@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Imported Items for {{ ship.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h2 class="mb-4">Imported Items for <span class="text-primary">{{ ship.ship_name }}</span></h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle bg-white">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Added At</th>
+                        <th>Arrived On</th>
+                        <th>Request for Release</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in imported_items %}
+                        <tr>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.added_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ item.import_date|date:"Y-m-d" }}</td>
+                            <td>
+                               <form method="post" action="{% url 'request_release' item.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-link"
+        {% if item.gate_pass %}disabled{% endif %}>
+        Request Release
+    </button>
+</form>
+                            </td>
+                            
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No imported items for this ship.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{% url 'company'%}" class="btn btn-secondary mt-3">&larr; Back to Home</a>
+    </div>
+</body>
+</html>

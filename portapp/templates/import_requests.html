@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Import Requests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #f1f5f9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .table-container {
+            background-color: #111827;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            max-width: 100%;
+        }
+
+        h2 {
+            color: #e0f2fe;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .table {
+            background-color: transparent;
+            color: #ffffff;
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border-color: #334155 !important;
+            vertical-align: middle;
+            background-color: transparent;
+            color: #ffffff;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1e293b;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #273449;
+        }
+
+        .table tbody tr:hover {
+            background-color: #334155;
+        }
+
+        .btn-warning {
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+
+        .btn-warning:disabled {
+            background-color: #555555 !important;
+            border-color: #555555 !important;
+            color: #cccccc;
+            opacity: 0.6;
+        }
+
+        .btn-link {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="table-container">
+            <h2>📥 Import Requests</h2>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Ship</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Release Status</th>
+                        <th>Import Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>
+                                {% with company=item.ship.login.company_register_set.first %}
+                                    {{ company.company_name }}
+                                {% endwith %}
+                            </td>
+                            <td>{{ item.ship.ship_name }}</td>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td><strong>{{ item.get_release_status_display }}</strong></td>
+                            <td>{{ item.import_date|date:"Y-m-d" }}</td>
+                            <td>
+                                <form method="post" action="{% url 'request_documents' item.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning btn-sm"
+                                        {% if item.release_status == 'request_documents' or item.release_status == 'accept' %}disabled{% endif %}>
+                                        Request Documents
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No import requests found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'admin' %}" class="btn btn-link mt-4">&larr; Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

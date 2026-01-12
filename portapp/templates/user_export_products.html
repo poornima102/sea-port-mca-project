@@ -1,0 +1,111 @@
+{% extends "user_header.html" %}
+{% block title %}Export Products{% endblock %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background: #ffffff !important;
+        font-family: 'Rubik', sans-serif;
+        color: #003366;
+    }
+
+    h2 {
+        color: #007BFF !important; /* Light blue */
+        font-weight: bold !important;
+    }
+
+    th, td, label, .text-center, .form-label {
+        color: #003366 !important;
+    }
+
+    .table {
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table thead th {
+        background: #007BFF !important;
+        color: #ffffff !important;
+        border-color: #0056b3 !important;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #007BFF !important;
+    }
+
+    .btn-primary {
+        background-color: #007BFF !important;
+        border-color: #007BFF !important;
+        color: #ffffff !important;
+        font-weight: 500;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3 !important;
+        border-color: #0056b3 !important;
+        color: #ffffff !important;
+    }
+
+    .form-control:focus {
+        border-color: #007BFF !important;
+        box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+    }
+
+    .input-group input::placeholder {
+        color: #999;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f7fbff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="query" class="form-control" placeholder="Search by Product Name, Category, or Company Name" value="{{ query|default:'' }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Export Products</h2>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Product Category</th>
+                <th>Product Name</th>
+                <th>Amount</th>
+                <th>Tax</th>
+                <th>Date</th>
+                <th>Company Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.product_category }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.amount }}</td>
+                <td>{{ product.tax }}</td>
+                <td>{{ product.current_date|date:"Y-m-d" }}</td>
+                <td>{{ product.company_name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">No export products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

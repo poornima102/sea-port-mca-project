@@ -1,0 +1,296 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Registration</title>
+    <link rel="stylesheet" href="{% static 'user/assets/css/style-starter.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #e3f2fd 0%, #bbdefb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 32px 28px 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            width: 100%;
+            max-width: 900px;
+            margin: 100px auto 40px auto;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            color: #007BFF;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #b0bec5;
+            border-radius: 6px;
+            background: #f7fafc;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007BFF;
+            outline: none;
+            background: #fff;
+        }
+        .form-group .errorlist {
+            color: #d32f2f;
+            font-size: 13px;
+            margin: 3px 0 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 18px 8px 14px 8px;
+                margin-top: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'home_header.html' %}
+    <div class="container">
+        <h2>Contract Registration</h2>
+        <form action="{% url 'register_contract' %}" method="POST" autocomplete="off" id="contractRegForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form1.name }}
+                {{ form1.name.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_address">Address</label>
+                {{ form1.address }}
+                {{ form1.address.errors }}
+            </div>
+            <div class="form-group">
+              <label for="id_gender">Gender</label>
+              <select name="gender" id="id_gender">
+                <option value="">---------</option>
+                <option value="Female" {% if form1.gender.value == "Female" %}selected{% endif %}>Female</option>
+                <option value="Male" {% if form1.gender.value == "Male" %}selected{% endif %}>Male</option>
+                <option value="Other" {% if form1.gender.value == "Other" %}selected{% endif %}>Other</option>
+              </select>
+              {{ form1.gender.errors }}
+            </div>
+            <div class="form-group">
+              <label for="id_date_of_birth">Date of Birth <span style="font-size:13px;color:#888;">(e.g. 1/01/2000)</span></label>
+              {{ form1.date_of_birth }}
+              {{ form1.date_of_birth.errors }}
+              <small style="color:#888;">Format: DD/MM/YYYY</small>
+            </div>
+            <div class="form-group">
+                <label for="id_district">District</label>
+                {{ form1.district }}
+                {{ form1.district.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_registration_id">Registration ID</label>
+                {{ form1.registration_id }}
+                {{ form1.registration_id.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_contact">Contact</label>
+                {{ form1.contact }}
+                {{ form1.contact.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form2.email }}
+                {{ form2.email.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                {{ form2.password }}
+                {{ form2.password.errors }}
+            </div>
+            <div class="form-group">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+    {% include 'home_footer.html' %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const validators = [];
+
+            function handleValidation(input, pattern, validMsg, invalidMsg) {
+                const feedback = document.createElement('small');
+                feedback.style.display = 'block';
+                input.parentNode.appendChild(feedback);
+
+                function validate() {
+                    const value = input.value.trim();
+                    if (!value) {
+                        feedback.textContent = '❌ This field is required';
+                        feedback.style.color = 'red';
+                        return false;
+                    } else if (!pattern.test(value)) {
+                        feedback.textContent = '❌ ' + invalidMsg;
+                        feedback.style.color = 'red';
+                        return false;
+                    } else {
+                        feedback.textContent = '✅ ' + validMsg;
+                        feedback.style.color = 'green';
+                        return true;
+                    }
+                }
+
+                input.addEventListener('input', validate);
+                validators.push(validate);
+            }
+
+            // Name validation (letters and spaces)
+            const nameInput = document.querySelector('input[name="name"]');
+            if (nameInput) {
+                handleValidation(
+                    nameInput,
+                    /^[A-Za-z ]+$/,
+                    'Valid name',
+                    'Name must contain only letters and spaces'
+                );
+            }
+
+            // Address validation (letters, numbers, and spaces)
+            const addressInput = document.querySelector('input[name="address"]');
+            if (addressInput) {
+                handleValidation(
+                    addressInput,
+                    /^[A-Za-z0-9 ]+$/,
+                    'Valid address',
+                    'Address can contain only letters, numbers, and spaces'
+                );
+            }
+
+            // District validation (letters and spaces only)
+            const districtInput = document.querySelector('input[name="district"], select[name="district"]');
+            if (districtInput) {
+                handleValidation(
+                    districtInput,
+                    /^[A-Za-z ]+$/,
+                    'Valid district',
+                    'District can contain only letters and spaces'
+                );
+            }
+
+            // Registration ID validation (letters and numbers only)
+            const registrationIdInput = document.querySelector('input[name="registration_id"]');
+            if (registrationIdInput) {
+                handleValidation(
+                    registrationIdInput,
+                    /^[A-Za-z0-9]+$/,
+                    'Valid registration ID',
+                    'Registration ID must contain only letters and numbers'
+                );
+            }
+
+            // Contact validation (10 digits)
+            const contactInput = document.querySelector('input[name="contact"]');
+            if (contactInput) {
+                handleValidation(
+                    contactInput,
+                    /^\d{10}$/,
+                    'Valid phone number',
+                    'Enter a valid 10-digit phone number'
+                );
+            }
+
+            // Email validation
+            const emailInput = document.querySelector('input[name="email"]');
+            if (emailInput) {
+                handleValidation(
+                    emailInput,
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    'Valid email address',
+                    'Enter a valid email address'
+                );
+            }
+
+            // Password validation (min 8 chars, upper, lower, number, special char)
+            const passwordInput = document.querySelector('input[name="password"]');
+            if (passwordInput) {
+                handleValidation(
+                    passwordInput,
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+                    'Strong password',
+                    'Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character'
+                );
+            }
+
+            // Required fields for address, gender, date_of_birth, district, registration_id
+            ['address', 'gender', 'date_of_birth', 'district', 'registration_id'].forEach(fieldName => {
+                const input = document.querySelector(`[name="${fieldName}"]`);
+                if (input) {
+                    const feedback = document.createElement('small');
+                    feedback.style.display = 'block';
+                    input.parentNode.appendChild(feedback);
+
+                    input.addEventListener('input', function () {
+                        if (input.value.trim() === '') {
+                            feedback.textContent = '❌ This field is required';
+                            feedback.style.color = 'red';
+                        } else {
+                            feedback.textContent = '';
+                        }
+                    });
+                }
+            });
+
+            // Prevent form submission if any validation fails
+            const form = document.getElementById('contractRegForm');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    let isValid = true;
+                    validators.forEach(validateFn => {
+                        if (!validateFn()) isValid = false;
+                    });
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Please correct the errors in the form.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

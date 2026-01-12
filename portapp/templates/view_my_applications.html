@@ -1,0 +1,147 @@
+{% extends "contract_header.html" %}
+{% block title %}My Applications{% endblock title %}
+
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #e3f2fd;
+        font-family: 'Rubik', sans-serif;
+        font-size: 0.95rem;
+    }
+
+    .my-applications-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        color: #003366;
+        margin: 2rem 0 1.2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .table-container {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 123, 255, 0.1);
+        padding: 1.5rem;
+    }
+
+    table.table {
+        border: 1px solid #c0e2ff;
+    }
+
+    .table thead th {
+        background-color: #007BFF;
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        border: 1px solid #007BFF;
+        font-size: 1rem;
+        padding: 0.6rem;
+    }
+
+    .table td {
+        border: 1px solid #cbe7ff;
+        vertical-align: middle;
+        text-align: center;
+        padding: 0.5rem;
+        color: #003366;
+    }
+
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border: none;
+    }
+
+    .btn-info:hover {
+        background-color: #117a8b;
+    }
+
+    .text-success {
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .text-muted {
+        color: #6c757d;
+    }
+
+    @media (max-width: 576px) {
+        .my-applications-title {
+            font-size: 1.3rem;
+        }
+
+        table.table {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-12 table-container">
+            <h2 class="my-applications-title" style="color: #007BFF;">My Contracts</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Agreement</th>
+                            <th>Work Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        {% if app.status == 1 %}
+                        <tr>
+                            <td>{{ app.tender.category }}</td>
+                            <td>{{ app.tender.description }}</td>
+                            <td><span class="text-success">Approved</span></td>
+                            <td>
+                                {% if app.contract_agreement %}
+                                    <a href="{{ app.contract_agreement.url }}" class="btn btn-primary btn-sm" download>Download</a>
+                                {% else %}
+                                    <span class="text-muted">Pending Upload</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'work_status' app.id %}" class="btn btn-info btn-sm">View</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No applications found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

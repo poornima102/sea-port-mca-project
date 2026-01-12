@@ -1,0 +1,110 @@
+{% extends "company_header.html" %}
+{% block title %}View Ships{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #fff !important;
+        font-family: 'Rubik', sans-serif;
+        color: #007BFF;
+    }
+
+    h2 {
+        color: #007BFF;
+        font-weight: 600;
+    }
+
+    .ship-card {
+        background-color: #ffffff;
+        border-left: 5px solid #007BFF;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .ship-card h5 {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #003366;
+    }
+
+    .ship-info p {
+        margin: 0.25rem 0;
+        color: #004085;
+        font-size: 0.95rem;
+    }
+
+    .btn-group-custom {
+        margin-top: 1rem;
+    }
+
+    .btn {
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .btn-success, .btn-secondary, .btn-info, .btn-warning, .btn-danger {
+        color: #fff;
+    }
+
+    .btn-secondary {
+        color: #fff;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Ship List</h2>
+
+    {% if ships %}
+        {% for ship in ships %}
+        <div class="ship-card">
+            <h5>{{ ship.ship_name }}</h5>
+            <div class="ship-info">
+                <p><strong>Category:</strong> {{ ship.ship_category }}</p>
+                <p><strong>Type:</strong> {{ ship.ship_type }}</p>
+                <p><strong>Source:</strong> {{ ship.source }}</p>
+                <p><strong>Destination:</strong> {{ ship.destination }}</p>
+                <p><strong>Departure Date:</strong> {{ ship.departure_date }}</p>
+                <p><strong>Space Status:</strong> 
+                    <span class="badge {% if ship.space == 'available' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ ship.space|title }}
+                    </span>
+                </p>
+            </div>
+            <div class="btn-group-custom d-flex flex-wrap gap-2">
+                <!-- Space Buttons -->
+                <form method="post" action="{% url 'update_ship_space' ship.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="space" value="available">
+                    <button type="submit" class="btn btn-success btn-sm" {% if ship.space == 'available' %}disabled{% endif %}>Set Available</button>
+                </form>
+                <form method="post" action="{% url 'update_ship_space' ship.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="space" value="not_available">
+                    <button type="submit" class="btn btn-secondary btn-sm" {% if ship.space == 'not_available' %}disabled{% endif %}>Set Not Available</button>
+                </form>
+
+                <!-- Other Actions -->
+                <a href="{% url 'update_location' ship.id %}" class="btn btn-info btn-sm">Add Last Location</a>
+                <a href="{% url 'edit_ship' ship.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'delete_ship' ship.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center text-muted mt-5">No ships available.</div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

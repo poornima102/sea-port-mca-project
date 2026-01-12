@@ -1,0 +1,31 @@
+<!-- filepath: c:\Users\Poornima\seaport\portapp\templates\tender_detail.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tender Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Tender Details</h2>
+    <table class="table table-bordered">
+        <tr><th>Category</th><td>{{ tender.category }}</td></tr>
+        <tr><th>Type</th><td>{{ tender.get_tender_type_display }}</td></tr>
+        <tr><th>Description</th><td>{{ tender.description }}</td></tr>
+        <tr><th>Amount</th><td>{{ tender.amount }}</td></tr>
+        <tr><th>Starting Date</th><td>{{ tender.starting_date }}</td></tr>
+        <tr><th>Number of Days</th><td>{{ tender.number_of_days }}</td></tr>
+        <tr><th>Created At</th><td>{{ tender.created_at|date:"Y-m-d H:i" }}</td></tr>
+    </table>
+    {% if already_applied %}
+        <div class="alert alert-info">You have already applied for this tender.</div>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Apply for this Tender</button>
+        </form>
+    {% endif %}
+    <a href="{% url 'view_tenders' %}" class="btn btn-secondary mt-3">Back to Tenders</a>
+</div>
+</body>
+</html>

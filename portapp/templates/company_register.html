@@ -1,0 +1,340 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Registration</title>
+    <link rel="stylesheet" href="{% static 'user/assets/css/style-starter.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #e3f2fd 0%, #bbdefb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 32px 28px 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            width: 100%;
+            max-width: 900px;
+            margin: 100px auto 40px auto;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            color: #007BFF;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #b0bec5;
+            border-radius: 6px;
+            background: #f7fafc;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007BFF;
+            outline: none;
+            background: #fff;
+        }
+        .form-group .errorlist {
+            color: #d32f2f;
+            font-size: 13px;
+            margin: 3px 0 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 18px 8px 14px 8px;
+                margin-top: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'home_header.html' %}
+    <div class="container">
+        <h2>Company Registration</h2>
+        <form action="{% url 'register_company' %}" method="POST" autocomplete="off" id="companyRegForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- CompanyForm fields -->
+            <div class="form-group">
+                <label for="id_company_name">Company Name</label>
+                {{ form1.company_name }}
+                {{ form1.company_name.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_company_address">Company Address</label>
+                {{ form1.company_address }}
+                {{ form1.company_address.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_contact">Contact</label>
+                {{ form1.contact }}
+                {{ form1.contact.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_state">State</label>
+                {{ form1.state }}
+                {{ form1.state.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_district">District</label>
+                {{ form1.district }}
+                {{ form1.district.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_city">City</label>
+                {{ form1.city }}
+                {{ form1.city.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_registration_number">Company Registration Number / CIN</label>
+                {{ form1.registration_number }}
+                {{ form1.registration_number.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_industry_type">Industry Type</label>
+                {{ form1.industry_type }}
+                {{ form1.industry_type.errors }}
+            </div>
+            <!-- LoginForm fields -->
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form2.email }}
+                {{ form2.email.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                {{ form2.password }}
+                {{ form2.password.errors }}
+            </div>
+            <div class="form-group">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+    {% include 'home_footer.html' %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const validators = [];
+
+            function handleValidation(input, pattern, validMsg, invalidMsg) {
+                const feedback = document.createElement('small');
+                feedback.style.display = 'block';
+                input.parentNode.appendChild(feedback);
+
+                function validate() {
+                    const value = input.value.trim();
+                    if (!value) {
+                        feedback.textContent = '❌ This field is required';
+                        feedback.style.color = 'red';
+                        return false;
+                    } else if (pattern && !pattern.test(value)) {
+                        feedback.textContent = '❌ ' + invalidMsg;
+                        feedback.style.color = 'red';
+                        return false;
+                    } else {
+                        feedback.textContent = '✅ ' + validMsg;
+                        feedback.style.color = 'green';
+                        return true;
+                    }
+                }
+
+                input.addEventListener('input', validate);
+                validators.push(validate);
+            }
+
+            // Company Registration Number / CIN (must be exactly 21 alphanumeric characters)
+            const regNumInput = document.querySelector('input[name="registration_number"]');
+            if (regNumInput) {
+                handleValidation(
+                    regNumInput,
+                    /^[A-Za-z0-9]{21}$/,
+                    'Valid registration number (21 letters/numbers)',
+                    'Registration number must be exactly 21 letters and numbers'
+                );
+            }
+
+            // Industry Type (required, select)
+            const industryTypeInput = document.querySelector('select[name="industry_type"]');
+            if (industryTypeInput) {
+                const feedback = document.createElement('small');
+                feedback.style.display = 'block';
+                industryTypeInput.parentNode.appendChild(feedback);
+
+                function validateIndustryType() {
+                    if (!industryTypeInput.value) {
+                        feedback.textContent = '❌ Please select an industry type';
+                        feedback.style.color = 'red';
+                        return false;
+                    } else {
+                        feedback.textContent = '';
+                        return true;
+                    }
+                }
+                industryTypeInput.addEventListener('change', validateIndustryType);
+                validators.push(validateIndustryType);
+            }
+
+            // Company Name validation (letters, numbers, spaces)
+          
+            const companyNameInput = document.querySelector('input[name="company_name"]');
+            if (companyNameInput) {
+                handleValidation(
+                    companyNameInput,
+                    /^[A-Za-z0-9 ]+$/,
+                    'Valid company name',
+                    'Company name can only contain letters, numbers, and spaces,special characters are  allowed'
+                );
+
+                // Company Address validation (letters, numbers, spaces)
+                const companyAddressInput = document.querySelector('input[name="company_address"]');
+                if (companyAddressInput) {
+                    handleValidation(
+                        companyAddressInput,
+                        /^[A-Za-z0-9 ]+$/,
+                        'Valid company address',
+                        'Company address can only contain letters, numbers, and spaces'
+                    );
+                }
+            }
+            // State validation (letters and spaces only)
+            const stateInput = document.querySelector('input[name="state"]');
+            if (stateInput) {
+                handleValidation(
+                    stateInput,
+                    /^[A-Za-z ]+$/,
+                    'Valid state',
+                    'State can only contain letters and spaces'
+                );
+            }
+
+            // District validation (letters and spaces only)
+            const districtInput = document.querySelector('input[name="district"]');
+            if (districtInput) {
+                handleValidation(
+                    districtInput,
+                    /^[A-Za-z ]+$/,
+                    'Valid district',
+                    'District can only contain letters and spaces'
+                );
+            }
+
+            // City validation (letters and spaces only)
+            const cityInput = document.querySelector('input[name="city"]');
+            if (cityInput) {
+                handleValidation(
+                    cityInput,
+                    /^[A-Za-z ]+$/,
+                    'Valid city',
+                    'City can only contain letters and spaces'
+                );
+            }
+
+            // Contact validation (10 digits)
+            const contactInput = document.querySelector('input[name="contact"]');
+            if (contactInput) {
+                handleValidation(
+                    contactInput,
+                    /^\d{10}$/,
+                    'Valid phone number',
+                    'Enter a valid 10-digit phone number'
+                );
+            }
+
+            // Email validation
+            const emailInput = document.querySelector('input[name="email"]');
+            if (emailInput) {
+                handleValidation(
+                    emailInput,
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    'Valid email address',
+                    'Enter a valid email address'
+                );
+            }
+
+            // Password validation (min 8 chars, upper, lower, number, special char)
+            const passwordInput = document.querySelector('input[name="password"]');
+            if (passwordInput) {
+                handleValidation(
+                    passwordInput,
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+                    'Strong password',
+                    'Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character'
+                );
+            }
+
+            // Required fields for state, district, city
+            ['state', 'district', 'city'].forEach(fieldName => {
+                const input = document.querySelector(`[name="${fieldName}"]`);
+                if (input) {
+                    const feedback = document.createElement('small');
+                    feedback.style.display = 'block';
+                    input.parentNode.appendChild(feedback);
+
+                    input.addEventListener('input', function () {
+                        if (input.value.trim() === '') {
+                            feedback.textContent = '❌ This field is required';
+                            feedback.style.color = 'red';
+                        } else {
+                            feedback.textContent = '';
+                        }
+                    });
+                }
+            });
+
+            // Prevent form submission if any validation fails
+            const form = document.getElementById('companyRegForm');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    let isValid = true;
+                    validators.forEach(validateFn => {
+                        if (!validateFn()) isValid = false;
+                    });
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Please correct the errors in the form.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

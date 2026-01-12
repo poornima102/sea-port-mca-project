@@ -1,0 +1,81 @@
+{% extends "company_header.html" %}
+{% block title %}Company Complaints{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #fff !important;
+        font-family: 'Rubik', sans-serif;
+        color: #007BFF;
+    }
+    h2 {
+        color: #007BFF;
+        font-weight: 600;
+    }
+    .container {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
+        padding: 30px;
+    }
+    .table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+        color: #007BFF;
+    }
+    .table-primary {
+        background-color: #e3f2fd !important;
+        color: #004085 !important;
+    }
+    .btn-success {
+        background-color: #007BFF !important;
+        border-color: #007BFF !important;
+        color: #fff !important;
+    }
+    .btn-success:hover {
+        background-color: #0056b3 !important;
+    }
+    .text-center {
+        color: #007BFF !important;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4 text-center">Complaints Received</h2>
+    <table class="table table-bordered bg-white">
+        <thead class="table-primary">
+            <tr>
+                <th>User</th>
+                <th>Export</th>
+                <th>Complaint</th>
+                <th>Date</th>
+                <th>Reply</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complaint in complaints %}
+            <tr>
+                <td>{{ complaint.user.email }}</td>
+                <td>{{ complaint.export.product_name }}</td>
+                <td>{{ complaint.complaint_text }}</td>
+                <td>{{ complaint.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if complaint.replay_text %}
+                        {{ complaint.replay_text }}
+                    {% else %}
+                        <a href="{% url 'replay_complaint' complaint.id %}" class="btn btn-success btn-sm">Reply</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No complaints found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

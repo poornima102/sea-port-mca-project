@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uploaded Documents</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #ffffff; /* White text everywhere */
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .table-container {
+            background-color: #111827;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            max-width: 100%;
+        }
+
+        h2 {
+            color: #ffffff;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .table {
+            background-color: transparent;
+            color: #ffffff; /* White text */
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border-color: #334155 !important;
+            vertical-align: middle;
+            background-color: transparent !important;
+            color: #ffffff; /* Ensure white text inside cells */
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1e293b;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #273449;
+        }
+
+        .table tbody tr:hover {
+            background-color: #334155;
+        }
+
+        ul {
+            padding-left: 18px;
+            margin-bottom: 0;
+        }
+
+        ul li a {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+            color: #93c5fd;
+        }
+
+        .text-muted {
+            color: #cccccc !important;
+        }
+
+        .btn-success, .btn-danger {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+
+        .btn-link {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="table-container">
+            <h2>📁 Uploaded Documents</h2>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Ship</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Import Date</th>
+                        <th>Documents</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>
+                                {% with company=item.ship.login.company_register_set.first %}
+                                    {{ company.company_name }}
+                                {% endwith %}
+                            </td>
+                            <td>{{ item.ship.ship_name }}</td>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.import_date|date:"Y-m-d" }}</td>
+                            <td>
+                                {% if item.documents.exists %}
+                                    <ul>
+                                        {% for doc in item.documents.all %}
+                                            {% if doc.do_file %}<li><a href="{{ doc.do_file.url }}" target="_blank">Delivery Order (DO)</a></li>{% endif %}
+                                            {% if doc.customs_duty_file %}<li><a href="{{ doc.customs_duty_file.url }}" target="_blank">Customs Duty Payment Proof</a></li>{% endif %}
+                                            {% if doc.packing_list_file %}<li><a href="{{ doc.packing_list_file.url }}" target="_blank">Packing List</a></li>{% endif %}
+                                            {% if doc.import_declaration_file %}<li><a href="{{ doc.import_declaration_file.url }}" target="_blank">Import Declaration Form</a></li>{% endif %}
+                                            {% if doc.kyc_file %}<li><a href="{{ doc.kyc_file.url }}" target="_blank">KYC Documents</a></li>{% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <span class="text-muted">No documents uploaded.</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'accept_import' item.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_import' item.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No uploaded documents found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="javascript:history.back()" class="btn btn-link mt-4">&larr; Back</a>
+        </div>
+    </div>
+</body>
+</html>

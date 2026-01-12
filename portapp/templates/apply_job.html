@@ -1,0 +1,87 @@
+{% extends "user_header.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-5" style="min-height: 80vh; background: #ffffff;">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-header text-white text-center rounded-top-4" style="background: linear-gradient(90deg, #003366 0%, #007BFF 100%);">
+                    <h3 class="mb-0 fw-bold">Apply for Job</h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Back to Jobs Button -->
+                    <div class="mb-4">
+                        <a href="{% url 'user_view_jobs' %}" class="btn btn-outline-primary rounded-pill">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Jobs
+                        </a>
+                    </div>
+                    <!-- Messages -->
+                    {% if success %}
+                      <div class="alert alert-success">Job application submitted successfully.</div>
+                    {% endif %}
+                    {% if already_applied and not success %}
+                      <div class="alert alert-info">You have already applied for this job.</div>
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Job Name -->
+                        <div class="mb-3">
+                            <label for="job_name" class="form-label fw-semibold" style="color: #007BFF;">Job Name</label>
+                            <input type="text" id="job_name" class="form-control-plaintext ps-2" value="{{ job.job_name }}" readonly style="background: #f0f7ff; border-radius: 6px; color: #007BFF;">
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="mb-3">
+                            <label for="job_description" class="form-label fw-semibold" style="color: #007BFF;">Job Description</label>
+                            <textarea id="job_description" class="form-control" rows="4" readonly style="background: #f0f7ff; border-radius: 6px; color: #007BFF;">{{ job.job_description }}</textarea>
+                        </div>
+
+                        <!-- Upload CV -->
+                        <div class="mb-3">
+                            <label for="cv" class="form-label fw-semibold" style="color: #007BFF;">
+                                Upload CV <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" id="cv" name="cv" class="form-control" required style="color: #007BFF;">
+                            <div class="invalid-feedback">
+                                Please upload your CV.
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            {% if already_applied %}
+                                <button type="button" class="btn btn-secondary btn-lg rounded-pill shadow-sm" disabled>
+                                    <i class="fas fa-check me-2"></i> Applied
+                                </button>
+                            {% else %}
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm" style="background-color: #003366; border-color: #003366;">
+                                    <i class="fas fa-paper-plane me-2"></i> Submit Application
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Validation Script -->
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

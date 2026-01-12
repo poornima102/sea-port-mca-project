@@ -1,0 +1,91 @@
+{% extends "user_header.html" %}
+{% block title %}Exporting{% endblock %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background: #ffffff;
+        font-family: 'Rubik', sans-serif;
+        color: #003366;
+    }
+    h2, h3 {
+        color: #007BFF !important;
+        font-weight: bold !important;
+    }
+    th, td, label, .text-muted {
+        color: #003366 !important;
+    }
+    .btn-info, .btn-search-black {
+        background-color: #007BFF !important;
+        border-color: #007BFF !important;
+        color: #ffffff !important;
+    }
+    .btn-info:hover, .btn-search-black:hover {
+        background-color: #0056b3 !important;
+        border-color: #0056b3 !important;
+        color: #ffffff !important;
+    }
+    .form-control:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+    }
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #007BFF;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Search Ship Details</h2>
+
+    <!-- Search Form -->
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" id="search" name="query" class="form-control"
+                   placeholder="Search by Source or Destination"
+                   value="{{ query|default:'' }}" required>
+            <button type="submit" class="btn btn-search-black">Search</button>
+        </div>
+    </form>
+
+    <!-- Ship Card Grid -->
+    {% if ships %}
+        <h3 class="mb-3">Available Ships</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for ship in ships %}
+                <div class="col">
+                    <div class="card h-100 border border-primary shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ship.ship_name }}</h5>
+                            <p class="mb-1"><strong>Type:</strong> {{ ship.ship_type }}</p>
+                            <p class="mb-1"><strong>Category:</strong> {{ ship.ship_category }}</p>
+                            <p class="mb-1"><strong>IMO / MMSI:</strong> {{ ship.imo_number }} / {{ ship.mmsi_number }}</p>
+                            <p class="mb-1"><strong>Flag:</strong> {{ ship.flag_state }} | <strong>Year:</strong> {{ ship.year_built }}</p>
+                            <p class="mb-1"><strong>Route:</strong> {{ ship.source }} ➜ {{ ship.destination }}</p>
+                            <p class="mb-1"><strong>Departure:</strong> {{ ship.departure_date }}</p>
+                            <p class="mb-1"><strong>Status:</strong> {{ ship.location_status }} | <strong>Space:</strong> {{ ship.space }}</p>
+                            <p class="mb-1"><strong>Company:</strong> {{ ship.company_name }}</p>
+                            <p class="text-muted"><strong>Description:</strong> {{ ship.ship_description|truncatewords:25 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
+                            {% if request.session.user_id %}
+                                <a href="{% url 'add_export' ship.id %}" class="btn btn-success btn-sm {% if ship.space != 'available' %}disabled{% endif %}">Export</a>
+                                <a href="{% url 'chat' ship.login.id %}" class="btn btn-primary btn-sm">Chat</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">No results found. Try searching for a different source or destination.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

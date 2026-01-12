@@ -1,0 +1,158 @@
+{% extends "company_header.html" %}
+{% block title %}Update Profile{% endblock %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f0f6fc;
+    }
+    .card-header {
+        background-color: #007BFF !important;
+        color: #fff !important;
+        border-bottom: 1px solid #0056b3;
+    }
+    .btn-blue {
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        transition: background 0.3s ease-in-out;
+    }
+    .btn-blue:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+    .card {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
+    }
+    .card-body {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 0 0 16px 16px;
+    }
+    .form-control:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    .alert-info {
+        background-color: #e9f5ff;
+        color: #004085;
+        border: 1px solid #b8daff;
+    }
+    h4 {
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center g-4">
+        <!-- Company Profile Display -->
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h4 class="mb-0">Company Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 text-center">
+                        <span class="fa fa-building fa-3x text-primary"></span>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <strong>Company Name:</strong>
+                        <div class="text-end text-dark">{{ company_profile.company_name }}</div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <strong>Address:</strong>
+                        <div class="text-end text-dark">{{ company_profile.company_address }}</div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <strong>Contact:</strong>
+                        <div class="text-end text-dark">{{ company_profile.contact }}</div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <strong>Email:</strong>
+                        <div class="text-end text-dark">{{ company_profile.login.email }}</div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <strong>Registration No.:</strong>
+                        <div class="text-end text-dark">{{ company_profile.registration_number }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Update Form -->
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h4 class="mb-0">Update Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="company_name" name="company_name" value="{{ company_profile.company_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ company_profile.address }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" id="contact" name="contact" value="{{ company_profile.contact }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ company_profile.login.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registration_number" class="form-label">Registration Number</label>
+                            <input type="text" class="form-control" id="registration_number" name="registration_number" value="{{ company_profile.registration_number }}">
+                        </div>
+
+                        <!-- Password Update Section -->
+                        <hr class="my-4">
+                        <div class="mb-2 text-muted">
+                            <strong>Change Password (Optional)</strong>
+                        </div>
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Enter current password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter new password">
+                            <small class="text-muted">Minimum 8 characters including uppercase, lowercase, number & symbol.</small>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-blue btn-lg">Update Profile</button>
+                        </div>
+                    </form>
+
+                    {% if messages %}
+                        <div class="mt-4">
+                            {% for message in messages %}
+                                {% if 'profile' in message.tags %}
+                                    <div class="alert alert-info">{{ message }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if profile_message %}
+                        <div class="alert alert-info mt-4">{{ profile_message }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

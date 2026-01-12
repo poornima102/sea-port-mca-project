@@ -1,0 +1,129 @@
+{% extends "user_header.html" %}
+{% block title %}Job Listings{% endblock %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f0f6fc;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .job-table-container {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.06);
+        padding: 3rem 2rem;
+        margin-top: 3rem;
+    }
+
+    h2.section-title {
+        background: linear-gradient(to right, #d0e9ff, #ffffff);
+        border-left: 6px solid #007BFF;
+        color: #003366;
+        font-weight: 700;
+        font-size: 1.9rem;
+        letter-spacing: 0.5px;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        display: inline-block;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+    }
+
+    .table thead th {
+        background: #e3f2fd !important;
+        color: #007BFF !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.4px;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f7fbff;
+    }
+
+    .table-bordered {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        color: #003366;
+        font-size: 0.95rem;
+        padding: 0.75rem;
+    }
+
+    .btn-apply {
+        background: linear-gradient(to right, #007BFF, #339cff);
+        color: #fff;
+        border: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        transition: background 0.3s ease;
+    }
+
+    .btn-apply:hover {
+        background: linear-gradient(to right, #0056b3, #007BFF);
+        color: #fff;
+    }
+
+    .text-muted {
+        color: #007BFF !important;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container job-table-container">
+    <div class="text-center mb-4">
+        <h2 class="section-title">📋 Job Listings</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Salary</th>
+                    <th>Date Applied</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ job.job_category }}</td>
+                    <td class="fw-semibold">{{ job.job_name }}</td>
+                    <td>{{ job.job_description|truncatechars:60 }}</td>
+                    <td>{{ job.salary|floatformat:2 }}</td>
+                    <td>{{ job.date_of_apply|date:"M d, Y" }}</td>
+                    <td>
+                        {% if job.id in applied_job_ids %}
+    <button class="btn btn-secondary" disabled>Applied</button>
+{% else %}
+    <a href="{% url 'user_job_apply' job.id %}" class="btn btn-apply">Apply</a>
+{% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">No jobs available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

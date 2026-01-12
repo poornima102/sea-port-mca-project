@@ -1,0 +1,80 @@
+{% extends "company_header.html" %}
+{% block title %}Add Ship{% endblock %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4" style="color: #007bff;">Add Ship Details</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="ship_name" class="form-label">Ship Name</label>
+            <input type="text" name="ship_name" id="ship_name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+    <label for="ship_category" class="form-label">Ship Category</label>
+    <select name="ship_category" id="ship_category" class="form-control" required>
+        <option value="">Select Category</option>
+        <option value="Cargo">Cargo</option>
+        <option value="Container">Container</option>
+        <option value="Oil Tanker">Oil Tanker</option>
+        <option value="Bulk Carrier">Bulk Carrier</option>
+        <option value="Passenger">Passenger</option>
+        <!-- Add more as needed -->
+    </select>
+       </div>
+        <div class="mb-3">
+            <label for="ship_type" class="form-label">Ship Type</label>
+            <select name="ship_type" id="ship_type" class="form-control" required>
+            <option value="">Select Type</option>
+            <option value="Import">Import</option>
+            <option value="Export">Export</option>
+            <option value="Both">Both</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="imo_number" class="form-label">IMO Number</label>
+            <input type="text" name="imo_number" id="imo_number" class="form-control" maxlength="7" required>
+        </div>
+        <div class="mb-3">
+            <label for="mmsi_number" class="form-label">MMSI Number</label>
+            <input type="text" name="mmsi_number" id="mmsi_number" class="form-control" maxlength="9" required>
+        </div>
+        <div class="mb-3">
+            <label for="flag_state" class="form-label">Flag State</label>
+            <input type="text" name="flag_state" id="flag_state" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="year_built" class="form-label">Year Built</label>
+            <input type="number" name="year_built" id="year_built" class="form-control" min="1800" max="2100" required>
+        </div>
+        <div class="mb-3">
+            <label for="source" class="form-label">Source</label>
+            <input type="text" name="source" id="source" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="destination" class="form-label">Destination</label>
+            <input type="text" name="destination" id="destination" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="ship_description" class="form-label">Ship Description</label>
+            <textarea name="ship_description" id="ship_description" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="departure_date" class="form-label">Departure Date</label>
+            <input type="date" name="departure_date" id="departure_date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="ship_details" class="form-label">Ship Details</label>
+            <textarea name="ship_details" id="ship_details" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Ship</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

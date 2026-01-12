@@ -1,0 +1,143 @@
+{% extends "company_header.html" %}
+{% block title %}Company Export Items{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #fff !important;
+        font-family: 'Rubik', sans-serif;
+        color: #007BFF;
+    }
+
+    h2 {
+        color: #007BFF;
+        font-weight: 600;
+    }
+
+    .export-card {
+        background: #ffffff;
+        border-left: 5px solid #007BFF;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .export-card h5 {
+        font-weight: 600;
+        color: #003366;
+    }
+
+    .export-info p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #004085;
+    }
+
+    .badge.bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .badge.bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    .btn {
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .btn-info {
+        background-color: #007BFF !important;
+        border-color: #007BFF !important;
+        color: #fff !important;
+    }
+
+    .btn-warning {
+        color: #212529;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: #fff;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    @media (max-width: 576px) {
+        .export-info {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4 text-center">Export Items for {{ company_name }}</h2>
+
+    {% if exports %}
+        {% for export in exports %}
+        <div class="export-card">
+            <h5>{{ export.product_name }} <small class="text-muted">({{ export.product_category }})</small></h5>
+            <div class="export-info">
+                <p><strong>Exporting Price:</strong> ₹{{ export.exporting_price }}</p>
+                <p><strong>Tax:</strong> ₹{{ export.tax }}</p>
+                <p><strong>Quantity:</strong> {{ export.quantity }}</p>
+                <p><strong>Sender:</strong>
+                    {% with user=export.user_login.user_register_set.first %}
+                        {% if user %} {{ user.name }} {% else %} N/A {% endif %}
+                    {% endwith %}
+                </p>
+                <p><strong>Recipient:</strong> {{ export.recipient_name }}</p>
+                <p><strong>Address:</strong> {{ export.recipient_address }}</p>
+                <p><strong>Source:</strong> {{ export.source }} &nbsp; | &nbsp; <strong>Destination:</strong> {{ export.destination }}</p>
+                <p><strong>Ship:</strong> {{ export.ship.ship_name }}</p>
+                <p><strong>Status:</strong>
+                    {% if export.cancel_status == 1 %}
+                        <span class="badge bg-danger">Canceled</span>
+                    {% else %}
+                        <span class="badge bg-success">Active</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                {% if export.cancel_status == 1 %}
+                    <button class="btn btn-info btn-sm" disabled>Update Product Status</button>
+                    {% if export.refund_status == 0 %}
+                        <a href="{% url 'refund_export' export.id %}" class="btn btn-warning btn-sm"
+                           onclick="return confirm('Are you sure you want to refund this export?');">Refund</a>
+                    {% else %}
+                        <span class="badge bg-info">Refunded</span>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'add_product_status' export.ship.id export.id %}" class="btn btn-info btn-sm">Update Product Status</a>
+                    <span class="text-muted">Refund: N/A</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center text-muted mt-5">No exports found.</div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'company' %}" class="btn btn-secondary">&larr; Back</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

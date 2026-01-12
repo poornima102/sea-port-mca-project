@@ -1,0 +1,106 @@
+{% extends "company_header.html" %}
+{% block title %}Company Inbox{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #fff !important;
+        font-family: 'Rubik', sans-serif;
+        color: #007BFF;
+    }
+
+    h3 {
+        color: #007BFF;
+        font-weight: 600;
+    }
+
+    .table th, .table td {
+        color: #0056b3;
+        font-size: 0.95rem;
+    }
+
+    .table-primary {
+        background-color: #e3f2fd !important;
+        color: #004085 !important;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    .table {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    a.btn {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h3 class="mb-4 text-center">User Chats</h3>
+    <table class="table table-bordered bg-white">
+        <thead class="table-primary">
+            <tr>
+                <th>User Name</th>
+                <th>Last Message</th>
+                <th>Reply</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in last_messages %}
+            <tr>
+                <td>
+                    {% if entry.user_profile %}
+                        {{ entry.user_profile.name }}
+                    {% else %}
+                        {{ entry.user.email }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.last_msg %}
+                        {{ entry.last_msg.message }}<br>
+                        <small class="text-muted">{{ entry.last_msg.current_date }} {{ entry.last_msg.current_time|time:"H:i" }}</small>
+                    {% else %}
+                        <span class="text-muted">No messages yet.</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'chat1' entry.user.id %}" class="btn btn-primary btn-sm">Reply</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">No user chats yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center mt-4">
+        <a href="{% url 'company' %}" class="btn btn-primary" style="background-color: #007BFF; border-color: #007BFF;">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "user_header.html" %}
+{% block content %}
+<div class="container-fluid" style="background-color: #fff; min-height: 100vh; padding: 0;">
+    <div class="container mt-5" style="background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 2rem;">
+        <h2 class="text-center mb-4" style="color: #3399ff;">Interview Details for {{ job.job_name }}</h2>
+        <div style="background-color: #fff; padding: 1rem; border-radius: 8px;">
+            <table class="table table-hover table-bordered align-middle" style="background-color: #fff;">
+            <thead class="table-dark text-center">
+                <tr style="background-color: #3399ff; color: #fff;">
+                    <th>#</th>
+                    <th>Interview Date</th>
+                    <th>Interview Time</th>
+                    <th>Description</th>
+                    <th>Interview Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for interview in interviews %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>{{ interview.interview_date }}</td>
+                    <td>{{ interview.interview_time }}</td>
+                    <td>{{ interview.description }}</td>
+                    <td class="text-center">
+                        {% if interview.interview_link %}
+                            {% if interview.interview_status == 'Completed' %}
+                                <button class="btn btn-success btn-sm" disabled>
+                                    Interview Completed
+                                </button>
+                            {% else %}
+                                <a href="{{ interview.interview_link }}" target="_blank" class="btn btn-primary btn-sm">
+                                    Join Interview Conference
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">No link available</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No interview details available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'job_status' %}" class="btn btn-secondary" style="background-color: #3399ff; color: #fff; border: none;">
+            Back to Job Status
+        </a>
+    </div>
+    </div>
+</div>
+{% endblock %}

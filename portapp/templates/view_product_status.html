@@ -1,0 +1,181 @@
+{% extends "user_header.html" %}
+{% block title %}Track Shipment - {{ export.product_name }}{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+    body {
+        background: #f0f7ff;
+    }
+
+    .tracker {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 2rem 0;
+        padding: 1.5rem 0;
+    }
+
+    .tracker::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        right: 5%;
+        height: 4px;
+        background-color: #cce0f5;
+        z-index: 1;
+    }
+
+    .tracker-step {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        width: 16%;
+    }
+
+    .tracker-step .icon-circle {
+        width: 40px;
+        height: 40px;
+        margin: auto;
+        border-radius: 50%;
+        background-color: #cce0f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: #003366;
+    }
+
+    .tracker-step.done .icon-circle {
+        background-color: #007BFF;
+        color: #fff;
+    }
+
+    .tracker-step .label {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: #003366;
+        font-weight: 500;
+    }
+
+    .card-custom {
+        background: #ffffff;
+        border: 1px solid #cce0f5;
+        border-radius: 0.75rem;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+        padding: 1.5rem;
+        color: #003366;
+    }
+
+    h3, h5, p, strong {
+        color: #003366;
+    }
+
+    .badge.bg-info {
+        background-color: #cce5ff !important;
+    }
+
+    .btn-outline-secondary {
+        border-color: #007BFF;
+        color: #007BFF;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #007BFF;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="text-center mb-4">
+        <h3>Tracking Shipment: <span class="text-primary">{{ export.product_name }}</span></h3>
+        <p><strong>Export ID:</strong> {{ export.id }}</p>
+    </div>
+
+    {% if latest_status %}
+    <div class="card-custom mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Ship:</strong> {{ latest_status.ship.ship_name }}</p>
+                <p><strong>Export Date:</strong> {{ latest_status.current_date }} {{ latest_status.current_time|time:"H:i" }}</p>
+                {% if latest_status.ship.ship_image %}
+                    <img src="{{ latest_status.ship.ship_image.url }}" alt="Ship Image" class="img-fluid mb-2" style="max-width: 200px; border-radius: 8px;">
+                {% endif %}
+                {% if latest_location and latest_location.location %}
+                    <p>
+                        <strong>Current Location:</strong>
+                        <span class="badge bg-info text-dark">{{ latest_location.location }}</span>
+                        <small class="text-muted ms-2">({{ latest_location.current_date }} {{ latest_location.current_time|time:"H:i" }})</small>
+                    </p>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <p><strong>Status:</strong>
+                    {% if latest_status.delivered %}
+                        <span class="badge bg-success">Delivered</span>
+                    {% elif latest_status.in_transit %}
+                        <span class="badge bg-primary">In Transit</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Processing</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tracker -->
+    <div class="tracker">
+        {% for step in latest_status.step_statuses %}
+        <div class="tracker-step {% if step.value %}done{% endif %}">
+            <div class="icon-circle">
+                {% if step.value %}
+                    <i class="bi bi-check-lg"></i>
+                {% else %}
+                    <i class="bi bi-dot"></i>
+                {% endif %}
+            </div>
+            <div class="label">{{ step.label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Timeline History -->
+    <h5 class="mb-3">Update History</h5>
+    {% for status in status_updates %}
+    <div class="card-custom mb-3">
+        <div class="d-flex justify-content-between">
+            <div>
+                <strong>{{ status.current_date }} {{ status.current_time|time:"H:i" }}</strong>
+                {% if status.location %}
+                    <span class="badge bg-info text-dark ms-2">{{ status.location }}</span>
+                {% endif %}
+            </div>
+            <div class="text-end">
+                {% for step in status.step_statuses %}
+                    {% if step.value %}
+                        <span class="badge bg-success me-1">{{ step.label }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-info text-center">No status updates available yet.</div>
+    {% endif %}
+
+    <div class="text-center">
+        <a href="{% url 'my_exports' %}" class="btn btn-outline-secondary mt-4">
+            <i class="bi bi-arrow-left"></i> Back to Exports
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

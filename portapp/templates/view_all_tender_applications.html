@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Tender Applications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            background-color: #111827;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            margin-top: 3rem;
+        }
+
+        h2 {
+            color: #e0f2fe;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .table {
+            color: #ffffff;
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+        }
+
+        .table th,
+        .table td {
+            color: #ffffff !important;
+            vertical-align: middle;
+            background-color: transparent !important;
+        }
+
+        .badge {
+            font-size: 0.85rem;
+        }
+
+        .form-control,
+        input[type="file"] {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #ffffff;
+        }
+
+        .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-warning {
+            background-color: #facc15;
+            border-color: #facc15;
+            color: #000000;
+        }
+
+        .btn-success {
+            background-color: #22c55e;
+            border-color: #22c55e;
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            border-color: #ef4444;
+            color: #ffffff;
+        }
+
+        .text-white {
+            color: #ffffff !important;
+        }
+
+        .text-muted {
+            color: #cbd5e1 !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1f2937;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.25rem !important;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>All Tender Applications</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Tender</th>
+                <th>Contractor</th>
+                <th>Applied Amount</th>
+                <th>Applied Date</th>
+                <th>Status</th>
+                <th>Agreement</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.tender.category }}</td>
+                <td>
+                    {% with contract=app.contract_login.contract_register_set.first %}
+                        {{ contract.name|default:app.contract_login.email }}
+                    {% endwith %}
+                </td>
+                <td>₹ {{ app.applied_amount }}</td>
+                <td>{{ app.applied_date|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if app.status == 0 %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif app.status == 1 %}
+                        <span class="badge bg-success">Approved</span>
+                    {% else %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if app.status == 1 %}
+                        {% if app.contract_agreement %}
+                            <a href="{{ app.contract_agreement.url }}" class="btn btn-primary btn-sm" download>Download</a>
+                        {% else %}
+                            <form method="post" enctype="multipart/form-data" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="file" name="agreement_{{ app.id }}" required class="form-control mb-2">
+                                <button type="submit" name="upload_agreement" value="{{ app.id }}" class="btn btn-warning btn-sm">Upload</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-white">Not available</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if app.status == 0 %}
+                        <a href="{% url 'approve_tender_application' app.id %}" class="btn btn-success btn-sm mb-1">Approve</a><br>
+                        <a href="{% url 'reject_tender_application' app.id %}" class="btn btn-danger btn-sm mt-1">Reject</a>
+                    {% else %}
+                        <span class="text-white">No action</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted">No applications.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center mt-4">
+        <a href="{% url 'admin' %}" class="btn btn-primary">Back to Home</a>
+</div>
+
+</body>
+</html>

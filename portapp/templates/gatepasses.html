@@ -1,0 +1,91 @@
+{% extends "company_header.html" %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: #fff !important;
+        font-family: 'Rubik', sans-serif;
+        color: #007BFF;
+    }
+
+    h2 {
+        color: #007BFF;
+        font-weight: 600;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        color: #007BFF;
+    }
+
+    .table-primary {
+        background-color: #e3f2fd !important;
+        color: #004085 !important;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        border-radius: 12px;
+    }
+
+    .bg-success {
+        background-color: #007BFF !important;
+        color: #fff;
+    }
+
+    .text-muted {
+        color: #5dade2 !important;
+    }
+
+    .btn-link {
+        color: #007BFF;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .btn-link:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Gate Passes</h2>
+
+    <table class="table table-bordered table-striped bg-white">
+        <thead class="table-primary">
+            <tr>
+                <th>Ship</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Import Date</th>
+                <th>Gate Pass</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.ship.ship_name }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.import_date|date:"Y-m-d" }}</td>
+                    <td>
+                        <span class="badge bg-success">{{ item.gate_pass }}</span>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No gate passes generated yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="javascript:history.back()" class="btn btn-link">&larr; Back</a>
+    </div>
+</div>
+{% endblock %}

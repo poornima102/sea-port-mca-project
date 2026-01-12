@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Interviews</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 50px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: #e0f2fe;
+            font-weight: 600;
+        }
+
+        .table {
+            background-color: transparent;
+            color: #ffffff;
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        .table th,
+        .table td {
+            color: #ffffff !important;
+            background-color: transparent;
+            border: 1px solid #334155;
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1f2937;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #273449;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #334155;
+        }
+
+        a, a:link, a:visited {
+            color: #93c5fd;
+        }
+
+        a:hover {
+            color: #bfdbfe;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4">List of Interviews</h2>
+    <table class="table table-bordered table-striped table-hover align-middle">
+        <thead class="text-center">
+            <tr>
+                <th>#</th>
+                <th>Job Name</th>
+                <th>User Name</th>
+                <th>Interview Date</th>
+                <th>Interview Time</th>
+                <th>Description</th>
+                <th>Interview</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for interview in interviews %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td>{{ interview.job_application.job_id.job_name }}</td>
+                <td>{{ interview.job_application.user.name }}</td>
+                <td>{{ interview.interview_date }}</td>
+                <td>{{ interview.interview_time }}</td>
+                <td>{{ interview.description }}</td>
+                <td class="text-center">
+                    {% if interview.interview_status == 'Scheduled' %}
+                        <a href="{% url 'videocall_interview' interview.id %}" class="btn btn-primary btn-sm">
+                            Conduct Interview
+                        </a>
+                        <form method="post" action="{% url 'complete_interview' interview.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Complete Interview</button>
+                        </form>
+                    {% elif interview.interview_status == 'Completed' %}
+                        <span class="btn btn-success btn-sm disabled">Completed Interview</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted">No interviews found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center mt-4">
+        <a href="{% url 'admin' %}" class="btn btn-primary">Back to Home</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

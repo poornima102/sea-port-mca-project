@@ -1,0 +1,178 @@
+{% extends "contract_header.html" %}
+{% block title %}Update Profile{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f0f8ff;
+        font-family: 'Rubik', sans-serif;
+        font-size: 0.95rem;
+    }
+    .card {
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+    }
+    .card-header {
+        background: linear-gradient(90deg, #003366, #007BFF);
+        color: #fff;
+        padding: 0.8rem 1rem;
+        text-align: center;
+        border-radius: 14px 14px 0 0;
+    }
+    .card-header h5 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    .card-body {
+        padding: 1.25rem 1.25rem 1rem;
+        background: #ffffff;
+    }
+    .form-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        color: #003366;
+    }
+    .form-control {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.7rem;
+        border-radius: 8px;
+    }
+    .form-control:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+    }
+    .btn-blue {
+        background: linear-gradient(90deg, #007BFF, #0056b3);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.55rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+    .btn-blue:hover {
+        background: #fff;
+        color: #007BFF;
+        border: 1px solid #007BFF;
+    }
+    .fa-user-tie {
+        font-size: 2.4rem;
+        color: #007BFF;
+    }
+    .profile-info .row {
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+    }
+    .alert-info {
+        background-color: #e3f2fd;
+        border-left: 4px solid #007BFF;
+        color: #004085;
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+    }
+    @media (max-width: 767px) {
+        .card-body {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center g-3">
+        <!-- Contractor Profile -->
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Contractor Profile</h5>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="text-center mb-2">
+                        <span class="fa fa-user-tie"></span>
+                    </div>
+                    <div class="profile-info text-start">
+                        <div class="row">
+                            <div class="col-5"><strong>Name:</strong></div>
+                            <div class="col-7 text-end">{{ contract_profile.name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><strong>Address:</strong></div>
+                            <div class="col-7 text-end">{{ contract_profile.address }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><strong>Contact:</strong></div>
+                            <div class="col-7 text-end">{{ contract_profile.contact }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5"><strong>Email:</strong></div>
+                            <div class="col-7 text-end">{{ contract_profile.login.email }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Profile -->
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Update Profile</h5>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if 'release' not in message.tags %}
+                                <div class="alert alert-success">{{ message }}</div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if profile_message %}
+                        <div class="alert alert-info">{{ profile_message }}</div>
+                    {% endif %}
+
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-2">
+                                <label class="form-label">{{ field.label_tag }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <hr class="my-3">
+                        <div class="mb-2 text-muted small"><strong>Change Password (optional)</strong></div>
+
+                        <div class="mb-2">
+                            <label for="current_password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Enter current password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter new password">
+                            <small class="text-muted">Min 8 chars, upper/lower, number & special character.</small>
+                        </div>
+
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-blue">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

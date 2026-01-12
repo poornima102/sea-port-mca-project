@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Complaints</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 50px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        }
+
+        h2 {
+            color: #ffffff;
+            font-weight: 600;
+            text-align: center;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            color: #ffffff;
+            background-color: transparent;
+        }
+
+        .table thead {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #334155;
+            background-color: transparent;
+            color: #ffffff;
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #1f2937;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #273449;
+        }
+
+        .table tbody tr:hover {
+            background-color: #334155;
+        }
+
+        .text-muted {
+            color: #f1f5f9 !important;
+        }
+
+        .text-center {
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mb-5">
+    <h2>📨 All Complaints</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Export Product</th>
+                <th>Complaint</th>
+                <th>Date</th>
+                <th>Company</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complaint in complaints %}
+            <tr>
+                <td>{{ complaint.user.email }}</td>
+                <td>{{ complaint.export.product_name }}</td>
+                <td>{{ complaint.complaint_text }}</td>
+                <td>{{ complaint.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if complaint.export and complaint.export.company_name %}
+                        {{ complaint.export.company_name }}
+                    {% else %}
+                        <span class="text-muted">N/A</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">No complaints found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center mt-4">
+        <a href="{% url 'admin' %}" class="btn btn-primary">&larr; Back to Home</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

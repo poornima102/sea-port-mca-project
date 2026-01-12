@@ -1,0 +1,198 @@
+{% extends "user_header.html" %}
+{% block title %}My Exports{% endblock %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background: #f4f9ff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h2 {
+        color: #007BFF;
+        font-weight: 700;
+        margin-bottom: 2rem;
+    }
+
+    .export-list .list-group-item {
+        border: 1px solid #d0e3f5;
+        border-radius: 1rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0,123,255,0.08);
+        padding: 2rem 1.5rem;
+        background: #ffffff;
+    }
+
+    .export-labels {
+        text-align: right;
+        font-weight: 600;
+        color: #0056b3;
+        min-width: 180px;
+        padding-right: 1.5rem;
+    }
+
+    .export-values {
+        text-align: left;
+        word-break: break-word;
+    }
+
+    .badge-id {
+        font-size: 0.85rem;
+        background: #007BFF;
+        color: #fff;
+        padding: 0.35em 0.75em;
+        border-radius: 0.75rem;
+    }
+
+    .export-actions a,
+    .export-actions button {
+        margin-bottom: 0.3rem;
+    }
+
+    .btn-success {
+        background-color: #28a745 !important;
+        border-color: #28a745 !important;
+        font-weight: 500;
+    }
+
+    .btn-warning {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+        color: #111 !important;
+        font-weight: 500;
+    }
+
+    .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: #007BFF !important;
+        border-color: #007BFF !important;
+        font-weight: 500;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        font-weight: 500;
+    }
+
+    .badge.bg-info {
+        background-color: #17a2b8 !important;
+        font-weight: 500;
+    }
+
+    .badge.bg-warning {
+        background-color: #ffc107 !important;
+        color: #111 !important;
+        font-weight: 500;
+    }
+
+    .text-muted {
+        color: #007BFF !important;
+        opacity: 0.6;
+    }
+
+    .text-center a.btn {
+        padding: 0.5rem 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">My Exported Products</h2>
+    <ul class="list-group export-list">
+        {% for export in exports %}
+        <li class="list-group-item">
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Export ID:</div>
+                <div class="col-12 col-md-9 py-1">
+                    <span class="badge badge-id">{{ export.unique_id }}</span>
+                </div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Product Category:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.product_category }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Product Name:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.product_name }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Exporting Price:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.exporting_price }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Tax:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.tax }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Quantity:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.quantity }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Recipient Name:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.recipient_name }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Recipient Address:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.recipient_address }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Source:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.source }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Destination:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.destination }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Ship Name:</div>
+                <div class="col-12 col-md-9 py-1">{{ export.ship.ship_name }}</div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Product Status:</div>
+                <div class="col-12 col-md-9 py-1">
+                    {% if export.cancel_status == 1 %}
+                        <button class="btn btn-success btn-sm" disabled>Product Status</button>
+                    {% else %}
+                        <a href="{% url 'view_product_status' export.id %}" class="btn btn-success btn-sm">Product Status</a>
+                    {% endif %}
+                </div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Actions:</div>
+                <div class="col-12 col-md-9 py-1">
+                    <a href="{% url 'edit_export' export.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    {% if export.cancel_status == 1 %}
+                        <button class="btn btn-danger btn-sm" disabled>Canceled</button>
+                    {% else %}
+                        <a href="{% url 'cancel_export' export.id %}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to cancel this export?');">Cancel</a>
+                    {% endif %}
+                </div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Complaint:</div>
+                <div class="col-12 col-md-9 py-1">
+                    <a href="{% url 'complaints' export.id %}" class="btn btn-primary btn-sm">Complaint</a>
+                </div>
+
+                <div class="col-12 col-md-3 text-md-end fw-semibold text-primary py-1">Refund:</div>
+                <div class="col-12 col-md-9 py-1">
+                    {% if export.cancel_status == 1 %}
+                        {% if export.refund_status == 1 %}
+                            <span class="badge bg-info">Refunded</span>
+                        {% else %}
+                            <span class="badge bg-warning">Refund Pending</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-muted">N/A</span>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-center text-muted">No paid exports found.</li>
+        {% endfor %}
+    </ul>
+    <div class="text-center">
+        <a href="{% url 'user' %}" class="btn btn-secondary mt-3">Back</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

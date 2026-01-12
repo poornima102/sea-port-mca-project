@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SEA PORTAL Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="{% static 'admin/css/styles.css' %}" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0b1120;
+            color: #f1f5f9;
+        }
+        .navbar, .sb-sidenav {
+            background-color: #111827;
+        }
+        .navbar-brand span {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .card {
+            border-radius: 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        .card .card-body {
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 1.25rem;
+        }
+        .card .card-footer {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .sb-sidenav .nav-link {
+            color: #cbd5e1;
+            padding: 12px 16px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .sb-sidenav .nav-link:hover {
+            background-color: #1e293b;
+            color: white;
+        }
+        .sb-sidenav .sb-sidenav-menu-heading {
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+        }
+        .dashboard-welcome {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .dashboard-welcome h2 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: #e0f2fe;
+        }
+        .dashboard-welcome p {
+            margin: 0.5rem 0 0;
+            color: #a5f3fc;
+            font-size: 1rem;
+        }
+        .card-footer a {
+            color: #e2e8f0;
+        }
+        .card-footer a:hover {
+            text-decoration: underline;
+        }
+        .card-footer i {
+            transition: transform 0.2s ease;
+        }
+        .card-footer:hover i {
+            transform: translateX(5px);
+        }
+        .badge.bg-primary {
+            background-color: #2563eb !important;
+        }
+        footer.bg-dark {
+            background-color: #111827 !important;
+        }
+        footer a {
+            color: #cbd5e1;
+        }
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark">
+    <a class="navbar-brand ps-3 d-flex align-items-center" href="#">
+        <i class="fas fa-anchor fa-lg me-2"></i>
+        <span>SEA PORTAL</span>
+    </a>
+    <button class="btn btn-link btn-sm me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+    <ul class="navbar-nav ms-auto me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <a class="nav-link" href="#"><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>Dashboard</a>
+                    <div class="sb-sidenav-menu-heading">Addons</div>
+                    <a class="nav-link" href="{% url 'view_jobs' %}"><div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>Jobs</a>
+                    <a class="nav-link" href="{% url 'job_applications' %}"><div class="sb-nav-link-icon"><i class="fas fa-file-signature"></i></div>Job Applications</a>
+                    <a class="nav-link" href="{% url 'create_interview' %}"><div class="sb-nav-link-icon"><i class="fas fa-calendar-plus"></i></div>Schedule Interview</a>
+                    <a class="nav-link" href="{% url 'view_interviews' %}"><div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>Conduct Interviews</a>
+                    <a class="nav-link" href="{% url 'news_page' %}"><div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>News</a>
+                    <a class="nav-link" href="{% url 'admin_view_all_complaints' %}"><div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>View Complaints</a>
+                    <a class="nav-link" href="{% url 'add_tender' %}"><div class="sb-nav-link-icon"><i class="fas fa-file-contract"></i></div>Add Tender</a>
+                    <a class="nav-link" href="{% url 'view_all_tender_applications' %}"><div class="sb-nav-link-icon"><i class="fas fa-clipboard-list"></i></div>View Tender Applications</a>
+                    <a class="nav-link" href="{% url 'imported_items' %}"><div class="sb-nav-link-icon"><i class="fas fa-truck-loading"></i></div>Add Imported Items</a>
+                    <a class="nav-link" href="{% url 'admin_work_status_reports' %}"><div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>Work Status Reports</a>
+                    <a class="nav-link" href="{% url 'add_notification' %}"><div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>Add Notification</a>
+                    <a class="nav-link" href="{% url 'import_requests' %}"><div class="sb-nav-link-icon"><i class="fas fa-file-import"></i></div>Import Requests</a>
+                    <a class="nav-link" href="{% url 'view_uploaded_documents' %}"><div class="sb-nav-link-icon"><i class="fas fa-file-upload"></i></div>Uploaded Documents</a>
+                    <a class="nav-link" href="{% url 'export_summary' %}"><div class="sb-nav-link-icon"><i class="fas fa-users-cog"></i></div>Export Tax Overview</a>
+                    <a class="nav-link" href="{% url 'import_export_graph' %}"><div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>Import–Export Summary</a>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                SEA PORTAL Admin
+            </div>
+        </nav>
+    </div>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between mt-4 mb-4">
+                    <h1 class="fw-bold" style="color:#007BFF;letter-spacing:1px;">Admin Dashboard</h1>
+                    <span class="badge bg-primary fs-6 py-2 px-3">SEA PORTAL</span>
+                </div>
+
+                <!-- Welcome Banner -->
+                <div class="dashboard-welcome">
+                    <h2>Welcome, Admin</h2>
+                    <p>Manage workflows, analyze port activity, and drive operational excellence.</p>
+                </div>
+
+                <!-- Dashboard Cards -->
+                <div class="row g-4">
+
+                    <!-- Job Applications Card -->
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card shadow border-0" style="background: linear-gradient(135deg, #007BFF 60%, #0056b3 100%);">
+                            <div class="card-body text-white d-flex align-items-center">
+                                <i class="fas fa-file-signature fa-2x me-3"></i>
+                                <div>
+                                    <div class="fs-5 fw-bold">Applications</div>
+                                    <div class="fs-4">{{ job_applications_count }}</div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a class="small text-white stretched-link" href="{% url 'job_applications' %}">Job Applications <i class="fas fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complaints Card -->
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card shadow border-0" style="background: linear-gradient(135deg, #dc3545 60%, #b52a37 100%);">
+                            <div class="card-body text-white d-flex align-items-center">
+                                <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                                <div>
+                                    <div class="fs-5 fw-bold">Complaints</div>
+                                    <div class="fs-4">{{ complaints_count }}</div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a class="small text-white stretched-link" href="{% url 'admin_view_all_complaints' %}">View Complaints <i class="fas fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Tax Summary -->
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card shadow border-0" style="background: linear-gradient(135deg, #6c757d 60%, #343a40 100%);">
+                            <div class="card-body text-white d-flex align-items-center">
+                                <i class="fas fa-ship fa-2x me-3"></i>
+                                <div>
+                                    <div class="fs-5 fw-bold">Export Tax Summary</div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a class="small text-white stretched-link" href="{% url 'export_summary' %}">View Summary <i class="fas fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-4 bg-dark mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small text-white">
+                    <div>&copy; 2025 SEA PORTAL</div>
+                    <div>
+                        <a href="#" class="text-white">Privacy Policy</a>
+                        &middot;
+                        <a href="#" class="text-white">Terms & Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'admin/js/scripts.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'admin/js/datatables-simple-demo.js' %}"></script>
+</body>
+</html>

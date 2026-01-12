@@ -1,0 +1,196 @@
+{% extends "user_header.html" %}
+{% load static %}
+{% block title %}Update Profile{% endblock %}
+{% block extra_head %}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #f0f8ff !important;
+        font-family: 'Rubik', sans-serif;
+    }
+    .update-profile-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-image: url('{% static "images/port-bg.jpg" %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        backdrop-filter: blur(4px);
+    }
+    .update-profile-page {
+        flex: 1 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1rem;
+    }
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(90deg, #003366, #007BFF);
+        color: #fff;
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+    .card-header h4 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: 1px;
+        font-size: 1.5rem;
+    }
+    .card-body {
+        padding: 2.5rem;
+        background: #ffffff;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-family: 'Rubik', sans-serif;
+        font-variant-numeric: normal;
+        transition: all 0.2s ease-in-out;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+        outline: none;
+    }
+    label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #003366;
+    }
+    .btn-primary {
+        background: linear-gradient(90deg, #007BFF, #0056b3) !important;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.75rem;
+        font-size: 1rem;
+        transition: 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: #fff !important;
+        color: #007BFF !important;
+        border: 2px solid #007BFF !important;
+    }
+    .alert-info {
+        background: #e3f2fd !important;
+        border: 1px solid #007BFF;
+        color: #0056b3;
+        font-weight: 500;
+    }
+    .profile-info div {
+        font-size: 0.95rem;
+        padding: 0.25rem 0;
+        color: #333;
+    }
+    .fa-user-circle {
+        font-size: 4rem;
+        color: #007BFF;
+    }
+    @media (max-width: 767px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="update-profile-wrapper">
+    <div class="update-profile-page">
+        <div class="container">
+            <div class="row justify-content-center g-4">
+                <!-- Profile Info -->
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>My Profile</h4>
+                        </div>
+                        <div class="card-body text-center" style="background: #e3f2fd;">
+                            <div class="mb-3">
+                                <span class="fa fa-user-circle"></span>
+                            </div>
+                            <div class="profile-info text-start px-3">
+                                <div><strong>Username:</strong> {{ user_profile.name }}</div>
+                                <div><strong>Address:</strong> {{ user_profile.address }}</div>
+                                <div><strong>Contact:</strong> {{ user_profile.contact }}</div>
+                                <div><strong>Email:</strong> {{ user_profile.login.email }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Form -->
+                <div class="col-md-7">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Update Profile</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" autocomplete="off">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" value="{{ user_profile.name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" value="{{ user_profile.address }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contact">Contact Number</label>
+                                    <input type="text" class="form-control" id="contact" name="contact" value="{{ user_profile.contact }}" required inputmode="numeric" pattern="[0-9]*">
+                                </div>
+                                
+                                <hr class="my-4">
+                                <div class="mb-2 text-muted">
+                                    <strong>Change Password (optional)</strong>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="current_password">Current Password</label>
+                                    <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Enter current password (only if changing password)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_password">New Password</label>
+                                    <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter new password">
+                                    <small class="text-muted">Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character.</small>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                </div>
+                            </form>
+
+                            {% if profile_message %}
+                                <div class="alert alert-info mt-3">{{ profile_message }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- row -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const passwordInput = document.querySelector('input[name="new_password"]');
+    if (passwordInput) {
+        passwordInput.pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$";
+        passwordInput.title = "Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character";
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "user_header.html" %}
+{% block title %}Help Desk | SEA PORT{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+    html, body {
+        height: 100%;
+        background: #f8f9fa !important;
+        color: #222 !important;
+        font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+        font-size: 16px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .help-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .help-card {
+        background: #fff;
+        color: #222;
+        border-radius: 14px;
+        border: 1px solid #e3e6f0;
+        box-shadow: 0 6px 32px rgba(0, 0, 0, 0.05);
+        max-width: 1000px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .help-header {
+        background: linear-gradient(90deg, #005fa3 0%, #0099d8 100%);
+        color: #fff;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e3e6f0;
+    }
+
+    .help-header h2 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+    .help-body {
+        padding: 2rem;
+    }
+
+    .help-section-title {
+        color: #005fa3;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .help-body p,
+    .help-body li,
+    .help-body dd {
+        color: #222;
+        font-size: 1rem;
+    }
+
+    .help-body h6 {
+        font-size: 1rem;
+    }
+
+    .help-contact-list {
+        list-style: none;
+        padding-left: 0;
+        font-size: 1rem;
+    }
+
+    .help-contact-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    a {
+        color: #005fa3;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    a:hover {
+        color: #003366;
+        text-decoration: underline;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #e3e6f0;
+        margin: 2rem 0;
+    }
+
+    @media (max-width: 767px) {
+        .help-body {
+            padding: 1rem;
+        }
+        .help-header h2 {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="help-container">
+    <div class="help-card">
+        <div class="help-header">
+            <h2>SEA PORT Help Desk</h2>
+        </div>
+        <div class="help-body">
+
+             <div>
+                <div class="help-section-title">Welcome to Support</div>
+                <p>
+                    Need assistance? Our Help Desk provides expert support for all SEA PORT portal services. Browse the guide below or contact us for personalized help.
+                </p>
+                <p>
+                    This page is designed to help you navigate the portal efficiently, resolve common issues, and understand the features available to you as a user. If you have any questions or encounter difficulties, our support team is ready to assist.
+                </p>
+            </div>
+            <hr>
+            <div>
+                <div class="help-section-title">Portal Navigation</div>
+                <dl class="help-list">
+                    <dt>Home</dt>
+                    <dd>
+                        Access main features and dashboard overview.<br>
+                        <span style="color:#555;">The Home page provides a summary of your recent activities, notifications, and quick links to essential sections. Use this as your starting point for all portal operations.</span>
+                    </dd>
+                    <dt>Profile</dt>
+                    <dd>
+                        Update your personal and account information.<br>
+                        <span style="color:#555;">Keep your contact details, password, and other profile information up to date to ensure smooth communication and secure access to your account.</span>
+                    </dd>
+                    <dt>News</dt>
+                    <dd>
+                        Read the latest port news and announcements.<br>
+                        <span style="color:#555;">Stay informed about important updates, events, and policy changes relevant to port operations and users.</span>
+                    </dd>
+                    <dt>Job Portal</dt>
+                    <dd>
+                        <ul>
+                            <li><strong>Job Status:</strong> Track your applications.<br>
+                                <span style="color:#555;">Monitor the progress of your job applications and receive timely updates on their status.</span>
+                            </li>
+                            <li><strong>View Jobs:</strong> Browse and apply for openings.<br>
+                                <span style="color:#555;">Explore current job opportunities at the port and submit your applications directly through the portal.</span>
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt>Export</dt>
+                    <dd>
+                        <ul>
+                            <li><strong>Product Details:</strong> Review your export products.<br>
+                                <span style="color:#555;">Manage and update information about the products you intend to export via the port.</span>
+                            </li>
+                            <li><strong>Search Ships:</strong> Find vessels for your exports.<br>
+                                <span style="color:#555;">Search for available ships and schedule your shipments efficiently.</span>
+                            </li>
+                            <li><strong>My Exports:</strong> Manage your submissions.<br>
+                                <span style="color:#555;">View, edit, or track the status of your export requests and documentation.</span>
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt>Notifications</dt>
+                    <dd>
+                        Receive important alerts and updates.<br>
+                        <span style="color:#555;">Get real-time notifications about your account, shipments, job applications, and other critical activities.</span>
+                    </dd>
+                    <dt>Help Desk</dt>
+                    <dd>
+                        Access user guides and support resources.<br>
+                        <span style="color:#555;">Find answers to frequently asked questions, troubleshooting tips, and contact information for further assistance.</span>
+                    </dd>
+                    <dt>Logout</dt>
+                    <dd>
+                        Securely sign out of your account.<br>
+                        <span style="color:#555;">Always log out after your session to protect your personal information and maintain account security.</span>
+                    </dd>
+                </dl>
+            </div>
+            <hr>
+            
+
+            <div>
+                <div class="help-section-title">Contact Support</div>
+                <p>For assistance, reach us through:</p>
+                <ul class="help-contact-list">
+                    <li>Email: <a href="mailto:info@vizhinjamport.in">info@vizhinjamport.in</a></li>
+                    <li>Phone: <a href="tel:+914712345678">+91 471 2345678</a></li>
+                    <li>Office Hours: Mon–Fri, 9:00 AM – 6:00 PM IST</li>
+                </ul>
+                <p>
+                    We typically respond within one business day. Provide screenshots or error messages to speed up support.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

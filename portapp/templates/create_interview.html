@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Interview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b1120;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 50px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: #e0f2fe;
+            font-weight: 600;
+        }
+
+        .form-label {
+            color: #cbd5e1;
+        }
+
+        .form-control {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #ffffff;
+        }
+
+        .form-control:focus {
+            background-color: #1e293b;
+            color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Create Interview</h2>
+        <form method="get" class="mb-4">
+            <label for="job_id" class="form-label">Select Job</label>
+            <select name="job_id" id="job_id" class="form-control" onchange="this.form.submit()" required>
+                <option value="">-- Select Job --</option>
+                {% for job in jobs %}
+                    <option value="{{ job.id }}" {% if job.id|stringformat:"s" == selected_job_id %}selected{% endif %}>{{ job.job_name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
+        {% if applications %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="job_id" value="{{ selected_job_id }}">
+            <div class="mb-3">
+                <label for="application_id" class="form-label">Select User (Accepted Applicant)</label>
+                <select name="application_id" id="application_id" class="form-control" required>
+                    <option value="">-- Select User --</option>
+                    {% for app in applications %}
+                        <option value="{{ app.id }}">{{ app.user.name }} ({{ app.user.login.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="interview_date" class="form-label">Interview Date</label>
+                <input type="date" name="interview_date" id="interview_date" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="interview_time" class="form-label">Interview Time</label>
+                <input type="time" name="interview_time" id="interview_time" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Interview Details</label>
+                <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-4">Submit</button>
+            </div>
+        </form>
+        {% endif %}
+        <div class="mt-4 text-center">
+            <a href="{% url 'admin' %}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
